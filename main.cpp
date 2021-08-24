@@ -1,6 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <stb_image.h>
+#include <camera.h>
 
 #include <iostream>
 #include <bitset>
@@ -18,7 +18,9 @@ using namespace std;
 
 #include <ant.h>
 
+void processInput(GLFWwindow *window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 // settings
 const unsigned int SCR_WIDTH  = 1000;
@@ -27,6 +29,12 @@ const unsigned int POP_SIZE   = 300000;
 const int    CHANNEL_COUNT    = 4;
 const GLenum PIXEL_FORMAT     = GL_RGBA;
 const int    DATA_SIZE        = SCR_WIDTH * SCR_HEIGHT * CHANNEL_COUNT;
+
+Camera camera(glm::vec3(0.0f, 0.0f, 155.0f));
+float lastX = (float)SCR_WIDTH / 2.0;
+float lastY = (float)SCR_HEIGHT / 2.0;
+bool firstMouse = true;
+float fov = 45;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -66,10 +74,6 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    #ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    #endif
-
     // glfw window creation
     // --------------------
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
@@ -79,7 +83,14 @@ int main()
         glfwTerminate();
         return -1;
     }
+   
     glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetScrollCallback(window, scroll_callback);
+
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -92,6 +103,11 @@ int main()
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
+
+
+
+
+
 
     // build and compile shaders
     // -------------------------
@@ -206,11 +222,20 @@ int main()
     glBufferData(GL_PIXEL_UNPACK_BUFFER, DATA_SIZE, 0, GL_STREAM_DRAW);
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
+
+
+
+   
     int l= 0;
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
     {
+
+        // input
+        // -----
+        processInput(window);
+
         l++;
         auto start = high_resolution_clock::now();
         
@@ -219,9 +244,15 @@ int main()
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+        // configure transformation matrices
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+        glm::mat4 view = camera.GetViewMatrix();
+        
         //----------------------------------------------------------------
         shaderAnts.use();
+        shaderAnts.setMat4("view", view);
+        shaderAnts.setMat4("projection", projection);
+
         VAOAnts.Bind();
         VBOTranformations.Bind();
         for(int i = 0; i < POP_SIZE; i++)
@@ -232,8 +263,12 @@ int main()
             modelMatrices[i][3][0] = (float)antsColony[i]->_x;
             modelMatrices[i][3][1] = (float)antsColony[i]->_y;
         }
+
+        
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::mat4)*POP_SIZE, modelMatrices);
         VBOTranformations.Unbind();
+
+
         glDrawArraysInstanced(GL_TRIANGLES, 0, 6, POP_SIZE); // 100000 triangles of 6 vertices each
         VAOAnts.Unbind();
         //----------------------------------------------------------------
@@ -282,9 +317,12 @@ int main()
 
 
         glBindTexture(GL_TEXTURE_2D, textureId);
+
+
         // render container
         shaderPheromone.use();
-
+        shaderPheromone.setMat4("view", view);
+        shaderPheromone.setMat4("projection", projection);
 
         VAOPheromone.Bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -300,7 +338,7 @@ int main()
 
         auto stop = high_resolution_clock::now(); 
         auto duration = duration_cast<microseconds>(stop - start); 
-        //cout << "Duração total: " << duration.count() << endl; 
+        cout << "Duração total: " << duration.count() << endl; 
     }
 
     
@@ -316,41 +354,34 @@ int main()
     return 0;
 }
 
+// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
+// ---------------------------------------------------------------------------------------------------------
+void processInput(GLFWwindow *window)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.ProcessKeyboard(FORWARD);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.ProcessKeyboard(BACKWARD);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.ProcessKeyboard(LEFT);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.ProcessKeyboard(RIGHT);
+}
+
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    // make sure the viewport matches the new window dimensions; note that width and 
-    // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 }
 
-/*  // load and create a texture 
-    // -------------------------
-    unsigned int texture;
 
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-
-    // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);   // set texture wrapping to GL_REPEAT (default wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load image, create texture and generate mipmaps
-
-    int width, height, nrChannels;
-
-    unsigned char *data = stbi_load("images.jpeg", &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
-*/
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void scroll_callback(GLFWwindow* window, double xoffset, double yOffset)
+{
+    camera.ProcessMouseScroll(yOffset);
+}

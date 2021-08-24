@@ -34,6 +34,7 @@ void VAO::LinkVBOMatrix4(VBO& VBO, GLuint layout, GLuint size, GLenum type, GLsi
 	VBO.Unbind();	
 }
 
+
 // Binds the VAO
 void VAO::Bind()
 {

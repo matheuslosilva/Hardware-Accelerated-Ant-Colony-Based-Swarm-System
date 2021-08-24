@@ -3,6 +3,7 @@
 
 #include<glad/glad.h>
 #include"VBO.h"
+#include<string>
 
 class VAO
 {
@@ -16,10 +17,13 @@ public:
 	void LinkVBO(VBO& VBO, GLuint layout, GLuint size, GLenum type, GLsizei stride, GLvoid* pointer);
 	void LinkVBOMatrix4(VBO& VBO, GLuint layout, GLuint size, GLenum type, GLsizei stride);
 	// Binds the VAO
+	// -----------------------------------------------------------------------
 	void Bind();
 	// Unbinds the VAO
 	void Unbind();
 	// Deletes the VAO
 	void Delete();
+
+	
 };
 #endif
