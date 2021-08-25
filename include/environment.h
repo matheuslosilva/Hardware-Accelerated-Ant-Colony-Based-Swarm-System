@@ -14,10 +14,13 @@
 #include <shader.h>
 #include <manageGlBindings.h>
 #include <camera.h>
+#include <sinCosLookup.h>
 
 using namespace std;
 
 // global settings constants
+extern unsigned int WIND_WIDTH;
+extern unsigned int WIND_HEIGHT;
 extern unsigned int SCR_WIDTH;
 extern unsigned int SCR_HEIGHT;
 extern unsigned int POP_SIZE;

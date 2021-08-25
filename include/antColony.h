@@ -14,7 +14,9 @@ class AntColony
 		AntColony();
 
 		glm::mat4* createAntsModelMatrices(vector<Ant*> antsColony);
+		void updateModelAnts();
 		void moveAnts(int l);
+
 
 };
 #endif

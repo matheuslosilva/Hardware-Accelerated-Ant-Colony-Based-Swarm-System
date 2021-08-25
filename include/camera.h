@@ -9,8 +9,8 @@
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
 enum Camera_Movement {
-    FORWARD,
-    BACKWARD,
+    UP,
+    DOWN,
     LEFT,
     RIGHT
 };
@@ -40,7 +40,6 @@ public:
      // constructor with vectors
     Camera() 
     {
-        glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f); glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
         Front = glm::vec3(0.0f, 0.0f, -1.0);
         Position = glm::vec3(0.0f, 0.0f, 1.0f); 
         WorldUp = glm::vec3(0.0f, 1.0f, 0.0f); 
@@ -56,9 +55,6 @@ public:
     // returns the view matrix calculated using Euler Angles and the LookAt Matrix
     glm::mat4 GetViewMatrix()
     {
-        //glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        //view = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
         return glm::lookAt(Position, Position + Front, Up);
     }
 
@@ -66,9 +62,9 @@ public:
     void ProcessKeyboard(Camera_Movement direction)
     {
         float velocity = MovementSpeed/350;
-        if (direction == FORWARD)
+        if (direction == UP)
             Position += Up * velocity;
-        if (direction == BACKWARD)
+        if (direction == DOWN)
             Position -= Up * velocity;
         if (direction == LEFT)
             Position -= Right * velocity;
@@ -79,17 +75,19 @@ public:
     // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
     void ProcessMouseScroll(float yoffset)
     {
-        Zoom -= (float)yoffset * 2;
-        if (Zoom < 1.0f)
-            Zoom = 1.0f;
-        if (Zoom > 100.0f)
-            Zoom = 100.0f; 
+        
+        Position += Front*yoffset/(40.0f);
+        if (Position.z < 0.001f)
+            Position.z = 0.001f;
+        if (Position.z > 200.0f)
+            Position.z = 200.0f;  
     }
 
 private:
     // calculates the front vector from the Camera's (updated) Euler Angles
     void updateCameraVectors()
     {
+
         // also re-calculate the Right and Up vector
         Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
         Up    = glm::normalize(glm::cross(Right, Front));

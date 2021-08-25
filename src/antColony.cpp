@@ -1,4 +1,5 @@
 #include <antColony.h>
+#include <sinCosLookup.h>
 
 glm::mat4* AntColony::createAntsModelMatrices(vector<Ant*> antsColony)
 {
@@ -29,14 +30,25 @@ AntColony::AntColony()
     antsModelMatrices = createAntsModelMatrices(ants);
 }
 
+void AntColony::updateModelAnts()
+{
+	for(int i = 0; i < POP_SIZE; i++)
+    {       
+		glm::mat4 model = glm::mat4(1.0f);
+        model = glm::rotate(model, ants[i]->_theta-glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::scale(model, glm::vec3(ants[i]->_size, ants[i]->_size, ants[i]->_size));
+        model[3][0] = (float)ants[i]->_x;
+        model[3][1] = (float)ants[i]->_y;
+
+        antsModelMatrices[i] = model;
+    }
+}
+
 void AntColony::moveAnts(int l)
 {
 	for(int i = 0; i < POP_SIZE; i++)
-    {        
-        float oldtheta = ants[i]->_theta;
-        ants[i]->move(l);
-        antsModelMatrices[i] = glm::rotate(antsModelMatrices[i], ants[i]->_theta - oldtheta, glm::vec3(0.0f, 0.0f, 1.0f));
-        antsModelMatrices[i][3][0] = (float)ants[i]->_x;
-        antsModelMatrices[i][3][1] = (float)ants[i]->_y;
+    {       
+
+		ants[i]->move(l);
     }
 }

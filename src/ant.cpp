@@ -1,4 +1,5 @@
 #include <ant.h>
+#include <sinCosLookup.h>
 
 Ant::Ant(float x, float y, float theta, float size, float velocity, float placedPheromoneIntensity)
 {
@@ -11,8 +12,17 @@ Ant::Ant(float x, float y, float theta, float size, float velocity, float placed
 
 void Ant::move(int l)
 {
-	_x += _velocity*cos(_theta);
-	_y += _velocity*sin(_theta);
+	float angle = _theta/M_PI*180;
+	while (angle < 0) angle += 360;
+	while (angle > 360) angle -= 360;
+
+	_x += _velocity*cosLookup[(int)angle*10];
+	_y += _velocity*sinLookup[(int)angle*10];
+
+	//_x += _velocity*cos(_theta);
+	//_y += _velocity*sin(_theta);
+	//TODO sin e cos lookup
+
 	
 	if(l%300 == 0)
 	{
