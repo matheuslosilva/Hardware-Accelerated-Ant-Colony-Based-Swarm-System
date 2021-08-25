@@ -1,11 +1,5 @@
-#include<ant.h>
+#include <ant.h>
 
-/*
-{.position={1,1,1}, color={1,0,0,1}}
-struct antInfo {vec3 position;vec4 color;}
-Ant(antInfo info)
-Ant({.position={1,1,1}, color={1,0,0,1}})
-*/
 Ant::Ant(float x, float y, float theta, float size, float velocity, float placedPheromoneIntensity)
 {
 	_x = x;

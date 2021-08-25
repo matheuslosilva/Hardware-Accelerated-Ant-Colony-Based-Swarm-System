@@ -19,6 +19,7 @@ class Ant
 	public:
 		Ant(float x, float y, float theta, float size, float velocity, float placePheromoneIntensity);
 
+		
 		//int getChoice() const { return _choice; }
 		//enum State { REST, SEARCH_NEW_NESTBOX, FIND_NESTBOX, BACK_TO_HOME, DANCE };
 		//State getState() const { return _state; }
