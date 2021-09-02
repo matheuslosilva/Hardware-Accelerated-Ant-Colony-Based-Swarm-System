@@ -16,7 +16,7 @@ enum Camera_Movement {
 };
 
 // Default camera values
-const float SPEED       =  2.5f;
+const float SPEED       =  0.01f;
 const float SENSITIVITY =  0.1f;
 const float ZOOM        =  45.0f;
 
@@ -41,7 +41,7 @@ public:
     Camera() 
     {
         Front = glm::vec3(0.0f, 0.0f, -1.0);
-        Position = glm::vec3(0.0f, 0.0f, 1.0f); 
+        Position = glm::vec3(0.0f, 0.0f, 0.25f); 
         WorldUp = glm::vec3(0.0f, 1.0f, 0.0f); 
 
         MovementSpeed = SPEED;
@@ -61,7 +61,7 @@ public:
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void ProcessKeyboard(Camera_Movement direction)
     {
-        float velocity = MovementSpeed/350;
+        float velocity = MovementSpeed/10;
         if (direction == UP)
             Position += Up * velocity;
         if (direction == DOWN)

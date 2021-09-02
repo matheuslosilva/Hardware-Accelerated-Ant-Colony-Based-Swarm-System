@@ -5,9 +5,9 @@
 // Environment
 unsigned int WIND_WIDTH  = 1000;
 unsigned int WIND_HEIGHT = 1000;
-unsigned int SCR_WIDTH  = 3000;
-unsigned int SCR_HEIGHT = 3000;
-unsigned int POP_SIZE   = 1000000;
+unsigned int SCR_WIDTH  = 1000;
+unsigned int SCR_HEIGHT = 1000;
+unsigned int POP_SIZE   = 50000;
 Camera camera;
 
 // Pixel mapping (for pheromone)
@@ -63,7 +63,7 @@ GLFWwindow*  glfwInitialize()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(WIND_WIDTH, WIND_HEIGHT, "LearnOpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(WIND_WIDTH, WIND_HEIGHT, "Ant Colony Simulation", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;

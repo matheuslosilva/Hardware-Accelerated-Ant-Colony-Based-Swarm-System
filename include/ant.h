@@ -1,15 +1,21 @@
 #ifndef ANT_H
 #define ANT_H
 
+#include <vector>
+
 #include <iostream>
 
 #include <glm/glm.hpp>
+
+using namespace std;
 
 class Ant 
 {
 	public:
 		// Ant state
 		float _x, _y;
+		float _xSensorR, _ySensorR;
+		float _xSensorL, _ySensorL;
 		float _theta;
 		float _size;
 		float _velocity;
@@ -23,6 +29,7 @@ class Ant
 		//int getChoice() const { return _choice; }
 		//enum State { REST, SEARCH_NEW_NESTBOX, FIND_NESTBOX, BACK_TO_HOME, DANCE };
 		//State getState() const { return _state; }
+		void environmentAnalysis(int viewFrequency, vector<int> &pheromoneMatrix);
 		void putPheromone(int* pheromoneMatrix);
 		void move(int l);
 		void draw();

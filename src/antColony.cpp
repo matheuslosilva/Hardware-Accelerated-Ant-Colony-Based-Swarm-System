@@ -23,10 +23,11 @@ glm::mat4* AntColony::createAntsModelMatrices(vector<Ant*> antsColony)
 AntColony::AntColony()
 {
 	for(int i = 0; i < POP_SIZE; i++)
-    {						// x  y                      theta                resize velocity  pheromoneIntensity
-        ants.push_back(new Ant(0, 0, (glm::radians(360.0f)/(float)POP_SIZE)*i, 0.05f, 0.0001f, 10.0f));
+    {						//          x                                  y                      theta                resize velocity  pheromoneIntensity
+        ants.push_back(new Ant((rand()%100 - 50)/1000.0f, (rand()%100 - 50)/1000.0f, glm::radians((float)(rand()%360)), 0.05f, 0.0001f, 10.0f));
     }
 
+    //(glm::radians(360.0f)/(float)POP_SIZE)*i
     antsModelMatrices = createAntsModelMatrices(ants);
 }
 
@@ -44,11 +45,12 @@ void AntColony::updateModelAnts()
     }
 }
 
-void AntColony::moveAnts(int l)
+void AntColony::moveAnts(int frameCounter, vector<int> &pheromoneMatrix)
 {
 	for(int i = 0; i < POP_SIZE; i++)
-    {       
-
-		ants[i]->move(l);
+    {      
+        //cout<<endl; 
+		ants[i]->move(frameCounter);
+        ants[i]->environmentAnalysis(frameCounter, pheromoneMatrix);
     }
 }
