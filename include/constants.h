@@ -1,20 +1,30 @@
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
 
 #include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
+
 #include <EBO.h>
 #include <VAO.h>
 #include <VBO.h>
+#include <shader.h>
+
 #include <iostream>
 #include <bitset>
 #include <vector>
+#include <chrono>
+
 #include <ant.h>
 #include <antColony.h>
-#include <shader.h>
+
+
+#include <glfwenvironment.h>
 #include <manageGlBindings.h>
 #include <camera.h>
 #include <sinCosLookup.h>
+
 
 using namespace std;
 
@@ -32,12 +42,6 @@ extern GLuint textureId; // ID of texture
 extern int indexPBO;
 extern int nextIndexPBO;
 extern Camera camera;
-
-
-GLFWwindow*  glfwInitialize();
-void processInput(GLFWwindow *window);
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-
+extern unsigned int GLOBAL_SEED;
 
 #endif

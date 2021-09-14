@@ -1,59 +1,67 @@
+#include <antColony.h>
 #include <ant.h>
 
-#include <environment.h>
 
+/*
+estado 1 - Exploratório: coloca vermelho (evaporação média) foge vermelho
+|
+|	encontrou feromonio verde -> Estado 4 - formiga achou o verde!: coloca feromonio (qual?) procura verde
+|										achou comida -> Vai pro estado 3 180
+|
+|	encontrou comida
+|
+|
+estado 2 - Achou comida: coloca verde (evaporação lenta) e procura vermelho 
+|
+|
+|	encontrou ninho com comida 
+|
+|
+estado 3 - encontrou ninho: coloca verde (evaporação lenta e maior quantidade) e procura verde    
+*/
 
-
-Ant::Ant(float x, float y, float theta, float size, float velocity, float placedPheromoneIntensity)
+Ant::Ant(float x, float y, float theta, float size, float velocity, float placedPheromoneIntensity, int pheromoneType)
 {
 	_x = x;
 	_y = y;
 
-	int angle = ((int)((_theta+M_PI/4)/M_PI*180)*10)%3600;
-	angle += 3600;
-	angle %= 3600;
+	_xSensorR =0;
+	_ySensorR = 0;
 
-	_xSensorR = x + 0.006*cosLookup[angle];
-	_ySensorR = y + 0.004*sinLookup[angle];
-
-	angle = ((int)((_theta-M_PI/4)/M_PI*180)*10)%3600;
-	angle += 3600;
-	angle %= 3600;
-
-	_xSensorL = x + (0.006)*cosLookup[angle];
-	_ySensorL = y + (0.004)*sinLookup[angle];
+	_xSensorL = 0;
+	_ySensorL = 0;
 
 	_theta = theta;
 	_size = size;
 	_velocity = velocity;
+	_pheromoneType = pheromoneType;
 }
 
 void Ant::move(int l)
 {
-	int angle = (((int)(_theta/M_PI*180))*10)%3600;
+	int angle = (int)((_theta/M_PI)*1800);
+	if(angle < 0) angle += 3600;
+	if(angle >= 3600) angle -= 3600;
 
-	_x += _velocity*cosLookup[(int)angle];
-	_y += _velocity*sinLookup[(int)angle];
+	_x += _velocity*cosLookup[angle];
+	_y += _velocity*sinLookup[angle];
 
-	angle = (((int)((_theta+M_PI/4)/M_PI*180))*10)%3600;
-	angle += 3600;
-	angle %= 3600;
+	angle = (int)(((_theta+M_PI/4)/M_PI)*1800);
+	if(angle < 0) angle += 3600;
+	if(angle >= 3600) angle -= 3600;
 
-	_xSensorR = _x + 0.006*cosLookup[(int)(angle)];
-	_ySensorR = _y + 0.004*sinLookup[(int)(angle)];
+	_xSensorR = _x + 0.002*cosLookup[angle];
+	_ySensorR = _y + 0.002*sinLookup[angle];
 
-	if(_xSensorR > 100000) cout << angle << endl;
 
-	angle = (((int)((_theta-M_PI/4)/M_PI*180))*10)%3600;
-	angle += 3600;
-	angle %= 3600;
+	angle = (int)(((_theta-M_PI/4)/M_PI)*1800);
+	if(angle < 0) angle += 3600;
+	if(angle >= 3600) angle -= 3600;
 	
-	_xSensorL = _x + 0.006*cosLookup[(int)(angle)];
-	_ySensorL = _y + 0.004*sinLookup[(int)(angle)];
+	_xSensorL = _x + 0.002*cosLookup[angle];
+	_ySensorL = _y + 0.002*sinLookup[angle];
 	
 	
-	
-	// TODO solve with other solution
 	//Border treatment
 	if(_x < -0.98f || _x > 0.98f) 
 	{
@@ -69,26 +77,32 @@ void Ant::move(int l)
 
 void Ant::environmentAnalysis(int viewFrequency, vector<int> &pheromoneMatrix)
 {
-	if(viewFrequency%50 == 0)
+	if(viewFrequency%10 == 0)
 	{
-		int rSensorPheromoneDetected = 0;
-		int lSensorPheromoneDetected = 0;
+		int rSensorRedPheromoneDetected = 0;
+		int lSensorRedPheromoneDetected = 0;
+		int rSensorBluePheromoneDetected = 0;
+		int lSensorBluePheromoneDetected = 0;
 
-		float xn, yn;
+		int xn, yn, index;
 
 		xn = ((SCR_WIDTH/2) + _xSensorR * (SCR_WIDTH/2));
 		yn = ((SCR_HEIGHT/2) + _ySensorR * (SCR_HEIGHT/2));
-		
 
 		for(int i = -1; i <=1; i++)
 		{
 			for(int j = -1; j <= 1; j++)
 			{
-				int actualColor = pheromoneMatrix[(((int)(yn+i))*SCR_WIDTH+(int)(xn+j))];
+				index = ((yn+i) * SCR_WIDTH + (xn+j));
 
-				bitset<32> r = (bitset<32>)actualColor & (bitset<32>)255;
+				int actualColor = pheromoneMatrix[index];
 
-	    		rSensorPheromoneDetected += (int)r.to_ulong() + (rand()%10)-5;
+				int red = actualColor & 255;
+				int blue = (actualColor >> 16) & 255;
+
+	    		rSensorRedPheromoneDetected += red + (rand()%10)-5;
+
+	    		rSensorBluePheromoneDetected += blue + (rand()%10)-5;
 			}
 		}
 
@@ -100,21 +114,43 @@ void Ant::environmentAnalysis(int viewFrequency, vector<int> &pheromoneMatrix)
 		{
 			for(int j = -1; j <= 1; j++)
 			{
-				int actualColor = pheromoneMatrix[(((int)(yn+i))*SCR_WIDTH+(int)(xn+j))];
+				index = ((yn+i) * SCR_WIDTH + (xn+j));
 
-				bitset<32> r = (bitset<32>)actualColor & (bitset<32>)255;
+				int actualColor = pheromoneMatrix[index];
 
-	    		lSensorPheromoneDetected += (int)r.to_ulong() + (rand()%10)-5;
+				int red = actualColor & 255;
+				int blue = (actualColor >> 16) & 255;
+
+	    		lSensorRedPheromoneDetected += red + (rand()%10)-5;
+
+	    		lSensorBluePheromoneDetected += blue + (rand()%10)-5;
 			}
 		}
 		
-		if(rSensorPheromoneDetected > lSensorPheromoneDetected)_theta += glm::radians((float)(rand()%360)/10.0f-1.0f)*1.3f;
-		else if(rSensorPheromoneDetected < lSensorPheromoneDetected) _theta -= glm::radians((float)(rand()%360)/10.0f-1.0f)*1.3f;
-		else if(_xSensorL < -0.98f || _xSensorL > 0.98f || _ySensorL < -0.98f || _ySensorL > 0.98f) _theta += glm::radians((float)(rand()%360)/10.0f-1.0f)*4.0f;
+		if(_pheromoneType == 1)
+		{
+			if(rSensorRedPheromoneDetected > lSensorRedPheromoneDetected)_theta -= glm::radians((float)(rand()%360)/6.0f)*0.4f;
+			else if(rSensorRedPheromoneDetected < lSensorRedPheromoneDetected) _theta += glm::radians((float)(rand()%360)/6.0f)*0.4f;
+			if(rSensorBluePheromoneDetected > lSensorBluePheromoneDetected)_theta += glm::radians((float)(rand()%360)/6.0f)*0.4f;
+			else if(rSensorBluePheromoneDetected < lSensorBluePheromoneDetected) _theta -= glm::radians((float)(rand()%360)/6.0f)*0.4f;
+
+			if(_x >= -0.01f && _x <= 0.01f && _y >= 0.3f && _y<= 0.31f) _pheromoneType = 2;
+		}
+		else
+		{
+			if(rSensorRedPheromoneDetected > lSensorRedPheromoneDetected)_theta += glm::radians((float)(rand()%360)/6.0f)*0.4f;
+			else if(rSensorRedPheromoneDetected < lSensorRedPheromoneDetected) _theta -= glm::radians((float)(rand()%360)/6.0f)*0.4f;
+			//if(rSensorBluePheromoneDetected > lSensorBluePheromoneDetected)_theta += glm::radians((float)(rand()%360)/6.0f)*0.5f;
+			//else if(rSensorBluePheromoneDetected < lSensorBluePheromoneDetected) _theta -= glm::radians((float)(rand()%360)/6.0f)*0.5f;
+		}
+
+		
+
+		if(_xSensorL < -0.98f || _xSensorL > 0.98f || _ySensorL < -0.98f || _ySensorL > 0.98f) _theta += glm::radians((float)(rand()%360)/10.0f-1.0f)*4.0f;
 		else if(_xSensorR < -0.98f || _xSensorR > 0.98f || _ySensorR < -0.98f || _ySensorR > 0.98f) _theta -= glm::radians((float)(rand()%360)/10.0f-1.0f)*4.0f;
 
 		if(_theta < 0) _theta += 2*M_PI;
-		if(_theta > 2*M_PI) _theta -= 2*M_PI;
+		if(_theta >= 2*M_PI) _theta -= 2*M_PI;
 	}		
 }
 

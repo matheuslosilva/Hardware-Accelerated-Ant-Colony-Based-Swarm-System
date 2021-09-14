@@ -1,11 +1,7 @@
 #ifndef ANT_H
 #define ANT_H
 
-#include <vector>
-
-#include <iostream>
-
-#include <glm/glm.hpp>
+#include <constants.h>
 
 using namespace std;
 
@@ -20,10 +16,11 @@ class Ant
 		float _size;
 		float _velocity;
 		float _placePheromoneIntensity;
+		int   _pheromoneType;
 		glm::vec3 _color;
 
 	public:
-		Ant(float x, float y, float theta, float size, float velocity, float placePheromoneIntensity);
+		Ant(float x, float y, float theta, float size, float velocity, float placePheromoneIntensity, int pheromoneType);
 
 		
 		//int getChoice() const { return _choice; }

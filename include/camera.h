@@ -1,11 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <vector>
+#include <constants.h>
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
 enum Camera_Movement {
@@ -41,7 +37,7 @@ public:
     Camera() 
     {
         Front = glm::vec3(0.0f, 0.0f, -1.0);
-        Position = glm::vec3(0.0f, 0.0f, 0.25f); 
+        Position = glm::vec3(0.0f, 0.0f, 4.0f); 
         WorldUp = glm::vec3(0.0f, 1.0f, 0.0f); 
 
         MovementSpeed = SPEED;
@@ -61,7 +57,7 @@ public:
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
     void ProcessKeyboard(Camera_Movement direction)
     {
-        float velocity = MovementSpeed/10;
+        float velocity = MovementSpeed*1.2f;
         if (direction == UP)
             Position += Up * velocity;
         if (direction == DOWN)
@@ -76,7 +72,7 @@ public:
     void ProcessMouseScroll(float yoffset)
     {
         
-        Position += Front*yoffset/(40.0f);
+        Position += Front*yoffset/(20.0f);
         if (Position.z < 0.001f)
             Position.z = 0.001f;
         if (Position.z > 200.0f)

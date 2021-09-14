@@ -13,9 +13,9 @@ VBO createAntsVertexObjects(VAO VAOAnts, glm::mat4* antsModelMatrices)
 
     float Colors[] = {
         // positions
-         0.0f, 1.0f, 0.0f,
-         0.0f, 0.0f, 1.0f,
-         0.0f, 0.0f, 1.0f
+         0.5f, 0.5f, 0.5f,
+         0.5f, 0.5f, 0.5f,
+         0.5f, 0.5f, 0.5f
     };
     VBO VBOColors(Colors, sizeof(Colors), GL_STATIC_DRAW);
 

@@ -1,6 +1,4 @@
-#include <environment.h>
-
-#include <chrono>
+#include <constants.h>
 
 using namespace std::chrono;
 using namespace std;
@@ -35,49 +33,59 @@ void testeSensor(vector<int> &pheromoneMatrix, float x, float y)
 }
 
 
-void updatePixels(vector<int> &pheromoneMatrix, float x, float y)
+void updatePixels(vector<int> &pheromoneMatrix, float x, float y, int pheromoneType)
 {
-    float xn, yn;
+    int xn, yn, index;
 
     xn = ((SCR_WIDTH/2) + x * (SCR_WIDTH/2));
     yn = ((SCR_HEIGHT/2) + y * (SCR_HEIGHT/2));
+    index = (yn * SCR_WIDTH) + xn;
 
-    int actualColor = pheromoneMatrix[(((int)yn)*SCR_WIDTH+(int)xn)];
+    int actualColor = pheromoneMatrix[index];
 
-    bitset<32> r = (bitset<32>)actualColor & (bitset<32>)255;
-    bitset<32> g = 0;//(bitset<32>)actualColor >> 8 & (bitset<32>)255;
-    bitset<32> b = 0;//(bitset<32>)actualColor >> 16 & (bitset<32>)255;
-    bitset<32> a = 0;//(bitset<32>)actualColor >> 32 & (bitset<32>)255;
+    int red = actualColor & 255;
+    int green = (actualColor >> 8) & 255;
+    int blue = (actualColor >> 16) & 255;
+    int a = (actualColor >> 24) & 255;
 
-    int ri = (int)r.to_ulong();
-    if(ri < 230)ri += 20;
-    r = (bitset<32>) ri;
+    if(pheromoneType == 1)
+    {
+        if(red < 230) red += 20;
+    }
+    else
+    {
+         if(blue < 230) blue += 20;
+    }       
 
-    bitset<32> rgba = ((a<<24)|(b<<16)|(g<<8)|r);
+    int rgba = ((a<<24)|(blue<<16)|(green<<8)|red);
 
-    pheromoneMatrix[(((int)yn)*SCR_WIDTH+(int)xn)] = (GLbitfield)rgba.to_ulong();
+    pheromoneMatrix[index] = rgba;
 }
 
 void pheromoneEvaporation(vector<int> &pheromoneMatrix, float x, float y)
 {
-    int actualColor = pheromoneMatrix[(((int)y)*SCR_WIDTH+(int)x)];
 
-    bitset<32> r = (bitset<32>)actualColor & (bitset<32>)255;
-    bitset<32> g = 0;//(bitset<32>)actualColor >> 8 & (bitset<32>)255;
-    bitset<32> b = 0;//(bitset<32>)actualColor >> 16 & (bitset<32>)255;
-    bitset<32> a = 0;//(bitset<32>)actualColor >> 32 & (bitset<32>)255;
+    int index = (y * SCR_WIDTH) + x;
 
-    float ri = (float)r.to_ulong();
-    if(ri > 1)ri -= 1;
-    r = (bitset<32>) ri;
+    int actualColor = pheromoneMatrix[index];
 
-    bitset<32> rgba = ((a<<24)|(b<<16)|(g<<8)|r);
+    int red = actualColor & 255;
+    int green = (actualColor >> 8) & 255;
+    int blue = (actualColor >> 16) & 255;
+    int a = (actualColor >> 24) & 255;
 
-    pheromoneMatrix[(((int)y)*SCR_WIDTH+(int)x)] = (GLbitfield)rgba.to_ulong();
+    if(red > 1)red -= 1;
+    if(blue > 1)blue -= 1;
+   
+
+    int rgba = ((a<<24)|(blue<<16)|(green<<8)|red);
+
+    pheromoneMatrix[index] = rgba;
 }
 
 int main()
 {
+    srand(GLOBAL_SEED);
     GLFWwindow* window = glfwInitialize();
 
     // build and compile shaders
@@ -128,13 +136,13 @@ int main()
         antColony.moveAnts(frameCounter, pheromoneMatrix); // TODO CUDA
 
 
-        if(frameCounter%6==0)
+        if(frameCounter%8==0)
         { 
             for(int xi = 0; xi < SCR_WIDTH; xi++)
             {
                 for(int yi = 0; yi < SCR_HEIGHT; yi++)
                 {
-                    pheromoneEvaporation(pheromoneMatrix, xi, yi); 
+                   pheromoneEvaporation(pheromoneMatrix, xi, yi); 
                 }
             }
         }
@@ -145,8 +153,8 @@ int main()
             // update data directly on the mapped buffer
             for(int i = 0; i < POP_SIZE; i++)
             {
-                updatePixels(pheromoneMatrix, antColony.ants[i]->_x, antColony.ants[i]->_y); 
-                //testeSensor(pheromoneMatrix, antColony.ants[i]->_xSensorR,antColony.ants[i]->_ySensorR);
+                updatePixels(pheromoneMatrix, antColony.ants[i]->_x, antColony.ants[i]->_y, antColony.ants[i]->_pheromoneType); 
+                //testeSensor(pheromoneMatrix, antColony.ants[i]->_xSensorR, antColony.ants[i]->_ySensorR);
                 //testeSensor(pheromoneMatrix, antColony.ants[i]->_xSensorL, antColony.ants[i]->_ySensorL);
             }
             
@@ -156,7 +164,7 @@ int main()
         {
             antColony.updateModelAnts();           
             
-            glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+            glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             shaderAnts.use();

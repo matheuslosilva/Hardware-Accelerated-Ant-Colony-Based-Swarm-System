@@ -1,7 +1,7 @@
 #ifndef ANTCOLONY_H
 #define ANTCOLONY_H
 
-#include <environment.h>
+#include<constants.h>
 
 using namespace std;
 	

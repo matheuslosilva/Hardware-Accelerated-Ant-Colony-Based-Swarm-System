@@ -1,5 +1,5 @@
 #include <antColony.h>
-#include <sinCosLookup.h>
+
 
 glm::mat4* AntColony::createAntsModelMatrices(vector<Ant*> antsColony)
 {
@@ -23,11 +23,15 @@ glm::mat4* AntColony::createAntsModelMatrices(vector<Ant*> antsColony)
 AntColony::AntColony()
 {
 	for(int i = 0; i < POP_SIZE; i++)
-    {						//          x                                  y                      theta                resize velocity  pheromoneIntensity
-        ants.push_back(new Ant((rand()%100 - 50)/1000.0f, (rand()%100 - 50)/1000.0f, glm::radians((float)(rand()%360)), 0.05f, 0.0001f, 10.0f));
-    }
+    {	
+        //ants.push_back(new Ant((rand()%100-50)/1000.0f, (rand()%100-50)/1000.0f, glm::radians((float)(rand()%360)), 0.02f, 0.00001f, 10.0f, 1));					
+                          //          x                                  y                      theta                                  resize velocity  pheromoneIntensity
+        if(i > POP_SIZE/2) ants.push_back(new Ant((rand()%100-50)/1000.0f, (rand()%100-50)/1000.0f, glm::radians((float)(rand()%360)), 0.02f, 0.0002f, 10.0f, 1));
+        else ants.push_back(new Ant((rand()%200-50)/1000.0f, (rand()%200-50)/1000.0f, glm::radians((float)(rand()%360)), 0.02f, 0.0001f, 10.0f, 1));
+        //if(i > POP_SIZE/2) ants.push_back(new Ant(0.98f, 0.98f, glm::radians((float)(rand()%360)), 0.02f, 0.00004f, 10.0f, 1));
+        //else ants.push_back(new Ant(-0.98f, -0.98f, glm::radians((float)(rand()%360)), 0.02f, 0.00004f, 10.0f, 2));
 
-    //(glm::radians(360.0f)/(float)POP_SIZE)*i
+    }
     antsModelMatrices = createAntsModelMatrices(ants);
 }
 
