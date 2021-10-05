@@ -1,39 +1,11 @@
 #include <constants.h>
+#include <openglBuffersManager.h>
 
 using namespace std::chrono;
 using namespace std;
 
-///////////////////////////////////////////////////////////////////////////////
-//                   copy an image data to texture buffer
-///////////////////////////////////////////////////////////////////////////////
-void testeSensor(vector<int> &pheromoneMatrix, float x, float y)
-{
-    float xn, yn;
 
-    xn = ((SCR_WIDTH/2) + x * (SCR_WIDTH/2));
-    yn = ((SCR_HEIGHT/2) + y * (SCR_HEIGHT/2));
-
-    for(int i = -1; i <=1; i++)
-    {
-        for(int j = -1; j <= 1; j++)
-        {
-            int actualColor = pheromoneMatrix[(((int)(yn+i))*SCR_WIDTH+(int)(xn+j))];
-
-            bitset<32> r = (bitset<32>)actualColor & (bitset<32>)255;
-            int ri = (int)r.to_ulong();
-            if(ri < 230)ri += 255;
-            r = (bitset<32>) ri;
-
-            bitset<32> rgba = (((bitset<32>)0<<24)|((bitset<32>)0<<16)|((bitset<32>)0<<8)|r);
-
-            pheromoneMatrix[(((int)yn+i)*SCR_WIDTH+(int)xn+j)] = (GLbitfield)rgba.to_ulong();
-
-        }
-    }
-}
-
-
-void updatePixels(vector<int> &pheromoneMatrix, float x, float y, int pheromoneType)
+void updatePixels(vector<uint8_t> &pheromoneMatrix, float x, float y, int pheromoneType)
 {
     int xn, yn, index;
 
@@ -41,201 +13,125 @@ void updatePixels(vector<int> &pheromoneMatrix, float x, float y, int pheromoneT
     yn = ((SCR_HEIGHT/2) + y * (SCR_HEIGHT/2));
     index = (yn * SCR_WIDTH) + xn;
 
-    int actualColor = pheromoneMatrix[index];
-
-    int red = actualColor & 255;
-    int green = (actualColor >> 8) & 255;
-    int blue = (actualColor >> 16) & 255;
-    int a = (actualColor >> 24) & 255;
-
     if(pheromoneType == 1)
     {
-        if(red < 230) red += 20;
+        if(pheromoneMatrix[index*4] < 230) pheromoneMatrix[index*4] += 20;
     }
-    else
+    else if(pheromoneType == 2)
     {
-         if(blue < 230) blue += 20;
+         if(pheromoneMatrix[(index*4)+2] < 230) pheromoneMatrix[(index*4)+2] += 20;
     }       
 
-    int rgba = ((a<<24)|(blue<<16)|(green<<8)|red);
-
-    pheromoneMatrix[index] = rgba;
 }
 
-void pheromoneEvaporation(vector<int> &pheromoneMatrix, float x, float y)
+void pheromoneEvaporation(vector<uint8_t> &pheromoneMatrix)
 {
 
-    int index = (y * SCR_WIDTH) + x;
-
-    int actualColor = pheromoneMatrix[index];
-
-    int red = actualColor & 255;
-    int green = (actualColor >> 8) & 255;
-    int blue = (actualColor >> 16) & 255;
-    int a = (actualColor >> 24) & 255;
-
-    if(red > 1)red -= 1;
-    if(blue > 1)blue -= 1;
-   
-
-    int rgba = ((a<<24)|(blue<<16)|(green<<8)|red);
-
-    pheromoneMatrix[index] = rgba;
+    for(int i = 0; i < DATA_SIZE; i+=4)
+    {
+        if(pheromoneMatrix[i]>0) pheromoneMatrix[i]--;
+    }
+    for(int i = 1; i < DATA_SIZE; i+=4)
+    {
+        if(pheromoneMatrix[i]>0) pheromoneMatrix[i]--;
+    }
+    for(int i = 2; i < DATA_SIZE; i+=4)
+    {
+        if(pheromoneMatrix[i]>0) pheromoneMatrix[i]--;
+    }
 }
 
 int main()
 {
     srand(GLOBAL_SEED);
-    GLFWwindow* window = glfwInitialize();
+
+    AntColony *antColony = new AntColony();
+
+    vector<uint8_t> pheromoneMatrix(DATA_SIZE);
+
+    OpenglContext* openglContext = new OpenglContext();
+
+    openglContext->init();
+
+    OpenglBuffersManager* openglBuffersManager = new OpenglBuffersManager(antColony);
+
+    camera->defMonitor();
 
     // build and compile shaders
     // -------------------------
-    Shader shaderAnts("shaders/vertexShader.s", "shaders/fragmentShader.s");
-
-    Shader shaderPheromone("shaders/texVertexShader.s", "shaders/textureShader.s");
-    
-    AntColony antColony = AntColony();
-
-    VAO VAOAnts;
-    
-    VBO AntsMatricesBuffer = createAntsVertexObjects(VAOAnts, antColony.antsModelMatrices);
-
-    VAO VAOPheromone = createPheromoneVertexObjects();
-    GLbitfield* pixelMap;
-
-    vector<int> pheromoneMatrix(DATA_SIZE/4);
-
-    glm::mat4 projection;
-    glm::mat4 view;
    
-    int frameCounter= 0;
-    float attFrame = glfwGetTime();
-    float openGlUpdate = 0.1;
+    int openGlRenderUpdateFrameRate = 2000;
+    int pheromoneEvaporationFrameRate = 5;
+    int pheromoneMatrixUpdatePixelsFrameRate = 5;
 
+    int frames = 0;
     // render loop
-    // -----------
-    while (!glfwWindowShouldClose(window))
+    // -------------------------------------------------------------------
+    while (!glfwWindowShouldClose(openglContext->antColonyWindow))
     {
+
+        
+
+       
+        
+
         // Environment
         //----------------------------------------------------------------
         // input
-        processInput(window);
+        openglContext->processInput(camera);
 
-        frameCounter++; // Frame Counter
-        frameCounter %= 1000;
-        auto start = high_resolution_clock::now(); // Execution time counter
+        antColony->moveAnts(openglContext->frameCounter, pheromoneMatrix); // TODO CUDA
+       
+         
 
-        // Configure transformation matrices
-        projection = glm::perspective(glm::radians(camera.Zoom), (float)WIND_WIDTH / (float)WIND_HEIGHT, 0.001f, 100.0f);
-        view = camera.GetViewMatrix();
-        
-        //----------------------------------------------------------------
-
-        // Ants
-        //----------------------------------------------------------------
-        antColony.moveAnts(frameCounter, pheromoneMatrix); // TODO CUDA
-
-
-        if(frameCounter%8==0)
+        if(openglContext->frameCounter % pheromoneEvaporationFrameRate == 0)
         { 
-            for(int xi = 0; xi < SCR_WIDTH; xi++)
-            {
-                for(int yi = 0; yi < SCR_HEIGHT; yi++)
-                {
-                   pheromoneEvaporation(pheromoneMatrix, xi, yi); 
-                }
-            }
+            pheromoneEvaporation(pheromoneMatrix); 
         }
+       
 
-        if(frameCounter%5==0)
+        if(openglContext->frameCounter % pheromoneMatrixUpdatePixelsFrameRate == 0)
         { 
           
             // update data directly on the mapped buffer
             for(int i = 0; i < POP_SIZE; i++)
             {
-                updatePixels(pheromoneMatrix, antColony.ants[i]->_x, antColony.ants[i]->_y, antColony.ants[i]->_pheromoneType); 
-                //testeSensor(pheromoneMatrix, antColony.ants[i]->_xSensorR, antColony.ants[i]->_ySensorR);
-                //testeSensor(pheromoneMatrix, antColony.ants[i]->_xSensorL, antColony.ants[i]->_ySensorL);
+               updatePixels(pheromoneMatrix, antColony->ants[i]->_x, antColony->ants[i]->_y, antColony->ants[i]->_pheromoneType); 
+               // testeSensor(pheromoneMatrix, antColony->ants[i]->_xSensorR, antColony->ants[i]->_ySensorR);
+                //testeSensor(pheromoneMatrix, antColony->ants[i]->_xSensorL, antColony->ants[i]->_ySensorL);
             }
             
         }
-
-        if(glfwGetTime() - attFrame > openGlUpdate) 
+         
+        if(openglContext->frameCounter % openGlRenderUpdateFrameRate == 0) 
         {
-            antColony.updateModelAnts();           
-            
-            glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            if(frames == 0 )openglContext->debugExecutionTimeStart();
+            cout << "FRAMES: " << frames << endl;
+            openglContext->pre_render();
 
-            shaderAnts.use();
-            shaderAnts.setMat4("view", view);
-            shaderAnts.setMat4("projection", projection);
+            antColony->updateModelAnts();           
 
-            VAOAnts.Bind();
+            openglBuffersManager->drawAnts(antColony, camera);
+    
+            openglBuffersManager->drawPheromone(pheromoneMatrix, camera);
 
-            AntsMatricesBuffer.Bind();
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::mat4)*POP_SIZE, antColony.antsModelMatrices); // FIRST BOTTLE NECK
-            AntsMatricesBuffer.Unbind();
+            if(frames != 0 )openglContext->debugExecutionTimeStop("pheromone");
 
-            glDrawArraysInstanced(GL_TRIANGLES, 0, 6, POP_SIZE); // 100000 triangles of 6 vertices each
-            VAOAnts.Unbind();
-            //----------------------------------------------------------------
-           
-
-            // ########################### TODO ##############################
-            // Pheromone
-            // In dual PBO mode, increment current index first then get the next index
-            indexPBO = (indexPBO + 1) % 2;
-            nextIndexPBO = (indexPBO + 1) % 2;
-            //----------------------------------------------------------------
-            // bind PBO to update pixel values
-            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pboIds[nextIndexPBO]);
-            glBufferData(GL_PIXEL_UNPACK_BUFFER, DATA_SIZE, 0, GL_STREAM_DRAW);
-            pixelMap = (GLbitfield*)glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY); 
-
-            memcpy(pixelMap, pheromoneMatrix.data(), DATA_SIZE); // smaller BOTTLE NECK
-            glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER); // release pointer to mapping buffer
-            //----------------------------------------------------------------
-
-            //----------------------------------------------------------------
-            // bind Texture
-            glBindTexture(GL_TEXTURE_2D, textureId);
-            // copy pixels from PBO to texture object
-            // Use offset instead of pointer.
-            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, SCR_WIDTH, SCR_HEIGHT, PIXEL_FORMAT, GL_UNSIGNED_BYTE, 0); // Big BOTTLE NECK if the screen grows
-            
-            // It is good idea to release PBOs with ID 0 after use.
-            // Once bound with 0, all pixel operations behave normal ways.
-            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-            //----------------------------------------------------------------
-            
-            // render container
-            shaderPheromone.use();
-            shaderPheromone.setMat4("view", view);
-            shaderPheromone.setMat4("projection", projection);
-
-            VAOPheromone.Bind();
-
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-            VAOPheromone.Unbind();
-            //--------------------------------------------------------------------------------
-            glfwSwapBuffers(window);
-
-            attFrame = glfwGetTime();
+ 
         }
+
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
-        
-        glfwPollEvents();
+        openglContext->post_render();
 
-        // Debug the execution time to improve optimization
-        auto stop = high_resolution_clock::now(); 
-        auto duration = duration_cast<microseconds>(stop - start); 
-        cout << "Execution time of one frame: " << duration.count()/1000.0f << endl; 
+        frames++;
+
+         openglContext->frameCounter++;
+        openglContext->frameCounter %= 1000;
+
     }
-    
-    glfwTerminate();
+
+    openglContext->end();
     return 0;
 }
 

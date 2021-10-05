@@ -6,6 +6,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLFW/glfw3.h>
 
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+
 #include <EBO.h>
 #include <VAO.h>
 #include <VBO.h>
@@ -19,12 +22,10 @@
 #include <ant.h>
 #include <antColony.h>
 
+#include <openglContext.h>
 
-#include <glfwenvironment.h>
-#include <manageGlBindings.h>
 #include <camera.h>
 #include <sinCosLookup.h>
-
 
 using namespace std;
 
@@ -41,7 +42,7 @@ extern GLuint pboIds[2]; // IDs of PBO
 extern GLuint textureId; // ID of texture
 extern int indexPBO;
 extern int nextIndexPBO;
-extern Camera camera;
 extern unsigned int GLOBAL_SEED;
+extern Camera* camera;
 
 #endif

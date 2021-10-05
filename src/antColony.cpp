@@ -26,8 +26,8 @@ AntColony::AntColony()
     {	
         //ants.push_back(new Ant((rand()%100-50)/1000.0f, (rand()%100-50)/1000.0f, glm::radians((float)(rand()%360)), 0.02f, 0.00001f, 10.0f, 1));					
                           //          x                                  y                      theta                                  resize velocity  pheromoneIntensity
-        if(i > POP_SIZE/2) ants.push_back(new Ant((rand()%100-50)/1000.0f, (rand()%100-50)/1000.0f, glm::radians((float)(rand()%360)), 0.02f, 0.0002f, 10.0f, 1));
-        else ants.push_back(new Ant((rand()%200-50)/1000.0f, (rand()%200-50)/1000.0f, glm::radians((float)(rand()%360)), 0.02f, 0.0001f, 10.0f, 1));
+        ants.push_back(new Ant((float)(rand()%100-50)/SCR_WIDTH, (float)(rand()%100-50)/SCR_HEIGHT, glm::radians((float)(rand()%360)), 0.02f, 0.0002f, 10.0f, 1));
+        
         //if(i > POP_SIZE/2) ants.push_back(new Ant(0.98f, 0.98f, glm::radians((float)(rand()%360)), 0.02f, 0.00004f, 10.0f, 1));
         //else ants.push_back(new Ant(-0.98f, -0.98f, glm::radians((float)(rand()%360)), 0.02f, 0.00004f, 10.0f, 2));
 
@@ -49,12 +49,14 @@ void AntColony::updateModelAnts()
     }
 }
 
-void AntColony::moveAnts(int frameCounter, vector<int> &pheromoneMatrix)
+void AntColony::moveAnts(int frameCounter, vector<uint8_t> &pheromoneMatrix)
 {
 	for(int i = 0; i < POP_SIZE; i++)
     {      
         //cout<<endl; 
 		ants[i]->move(frameCounter);
+
         ants[i]->environmentAnalysis(frameCounter, pheromoneMatrix);
+
     }
 }

@@ -75,9 +75,9 @@ void Ant::move(int l)
 
 }
 
-void Ant::environmentAnalysis(int viewFrequency, vector<int> &pheromoneMatrix)
+void Ant::environmentAnalysis(int viewFrequency, vector<uint8_t> &pheromoneMatrix)
 {
-	if(viewFrequency%10 == 0)
+	if(viewFrequency%5 == 0)
 	{
 		int rSensorRedPheromoneDetected = 0;
 		int lSensorRedPheromoneDetected = 0;
@@ -89,22 +89,19 @@ void Ant::environmentAnalysis(int viewFrequency, vector<int> &pheromoneMatrix)
 		xn = ((SCR_WIDTH/2) + _xSensorR * (SCR_WIDTH/2));
 		yn = ((SCR_HEIGHT/2) + _ySensorR * (SCR_HEIGHT/2));
 
+
 		for(int i = -1; i <=1; i++)
 		{
 			for(int j = -1; j <= 1; j++)
 			{
-				index = ((yn+i) * SCR_WIDTH + (xn+j));
-
-				int actualColor = pheromoneMatrix[index];
-
-				int red = actualColor & 255;
-				int blue = (actualColor >> 16) & 255;
-
-	    		rSensorRedPheromoneDetected += red + (rand()%10)-5;
-
-	    		rSensorBluePheromoneDetected += blue + (rand()%10)-5;
+				index = ((yn+i) * SCR_WIDTH + (xn+j)) * 4;
+				rSensorRedPheromoneDetected += pheromoneMatrix[index];
+	    		rSensorBluePheromoneDetected += pheromoneMatrix[index+2];
 			}
 		}
+
+		rSensorRedPheromoneDetected +=  (rand()%10)-5;
+		rSensorBluePheromoneDetected +=  (rand()%10)-5;
 
 		xn = ((SCR_WIDTH/2) + _xSensorL * (SCR_WIDTH/2));
 		yn = ((SCR_HEIGHT/2) + _ySensorL * (SCR_HEIGHT/2));
@@ -114,23 +111,19 @@ void Ant::environmentAnalysis(int viewFrequency, vector<int> &pheromoneMatrix)
 		{
 			for(int j = -1; j <= 1; j++)
 			{
-				index = ((yn+i) * SCR_WIDTH + (xn+j));
-
-				int actualColor = pheromoneMatrix[index];
-
-				int red = actualColor & 255;
-				int blue = (actualColor >> 16) & 255;
-
-	    		lSensorRedPheromoneDetected += red + (rand()%10)-5;
-
-	    		lSensorBluePheromoneDetected += blue + (rand()%10)-5;
+				index = ((yn+i) * SCR_WIDTH + (xn+j)) * 4;
+				lSensorRedPheromoneDetected += pheromoneMatrix[index];
+	    		lSensorBluePheromoneDetected += pheromoneMatrix[index+2];
 			}
 		}
 		
+		lSensorRedPheromoneDetected +=  (rand()%10)-5;
+		lSensorBluePheromoneDetected +=  (rand()%10)-5;
+
 		if(_pheromoneType == 1)
 		{
-			if(rSensorRedPheromoneDetected > lSensorRedPheromoneDetected)_theta -= glm::radians((float)(rand()%360)/6.0f)*0.4f;
-			else if(rSensorRedPheromoneDetected < lSensorRedPheromoneDetected) _theta += glm::radians((float)(rand()%360)/6.0f)*0.4f;
+			if(rSensorRedPheromoneDetected > lSensorRedPheromoneDetected)_theta += glm::radians((float)(rand()%360)/6.0f)*0.4f;
+			else if(rSensorRedPheromoneDetected < lSensorRedPheromoneDetected) _theta -= glm::radians((float)(rand()%360)/6.0f)*0.4f;
 			if(rSensorBluePheromoneDetected > lSensorBluePheromoneDetected)_theta += glm::radians((float)(rand()%360)/6.0f)*0.4f;
 			else if(rSensorBluePheromoneDetected < lSensorBluePheromoneDetected) _theta -= glm::radians((float)(rand()%360)/6.0f)*0.4f;
 
