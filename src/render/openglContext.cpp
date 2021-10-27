@@ -1,5 +1,5 @@
 #include <openglContext.h>
-#include <camera.h>
+
 
 using namespace std::chrono;
 
@@ -22,8 +22,11 @@ void OpenglContext::debugExecutionTimeStop(std::string debugText)
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void OpenglContext::processInput(Camera* camera)
+void OpenglContext::processInput(UI* userInterface)
 {
+    frameCounter++;
+    frameCounter %= 1000;
+
     if (glfwGetKey(antColonyWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(antColonyWindow, true);
 
@@ -31,15 +34,17 @@ void OpenglContext::processInput(Camera* camera)
         camera->ProcessKeyboard(UP);
 
     if (glfwGetKey(antColonyWindow, GLFW_KEY_S) == GLFW_PRESS)
-        camera->ProcessKeyboard(DOWN);
+       camera->ProcessKeyboard(DOWN);
 
     if (glfwGetKey(antColonyWindow, GLFW_KEY_A) == GLFW_PRESS)
-        camera->ProcessKeyboard(LEFT);
+       camera->ProcessKeyboard(LEFT);
     
     if (glfwGetKey(antColonyWindow, GLFW_KEY_D) == GLFW_PRESS)
-        camera->ProcessKeyboard(RIGHT); 
-
+       camera->ProcessKeyboard(RIGHT); 
+    
+    mouseState = glfwGetMouseButton(antColonyWindow, GLFW_MOUSE_BUTTON_LEFT);
     glfwPollEvents();
+    
 }
 
 static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -101,9 +106,7 @@ void  OpenglContext::init()
 void OpenglContext::pre_render()
 {
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);    
 }
 
 void OpenglContext::post_render()

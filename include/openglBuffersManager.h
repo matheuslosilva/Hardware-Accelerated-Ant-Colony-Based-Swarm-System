@@ -1,8 +1,13 @@
 #ifndef OPENGLBUFFERSMANAGER_H
 #define OPENGLBUFFERSMANAGER_H
 
-#include <constants.h>
-
+#include <EBO.h>
+#include <VAO.h>
+#include <VBO.h>
+#include <shader.h>
+#include <camera.h>
+#include <antColony.h>
+#include <foodsource.h>
 
 using namespace std;
 
@@ -10,26 +15,43 @@ class OpenglBuffersManager
 {
 	
 	public:
+
 	  	Shader* shaderAnts;
 	    Shader* shaderPheromone;
 
-	    VAO* VAOAnts = new VAO();
-	    VBO* AntsMatricesBuffer;
+	    vector < VAO* > VAOsFood;
+
+	    vector < VAO* > VAOsNest;
+
+	    vector < glm::mat4* > antsModelMatrices;
+	    vector < VBO* > antsMatricesBuffer;
+	    vector < VAO* > VAOsAnts;
 
 	    VAO* VAOPheromone;    
 	    GLbitfield* pixelMap;  
 
 	  public:
-		OpenglBuffersManager(AntColony *antColony);
 
-		VBO* createAntsComponents(glm::mat4* antsModelMatrices);
-		void drawAnts(AntColony* antColony, Camera* camera);
+		OpenglBuffersManager();
+		void resetBufferManager();
+		
+		void createFoodComponents(FoodSource* foodSource);
+		void createNestComponents(AntColony* antColony);
+		void drawFoods(int nFoods);
+		void drawNests(int nNests);
+
+		void createAntsModelMatrices(AntColony* antsColony);
+		void createAntsComponents(AntColony* antColony);
+		void updateModelAnts(AntColony* antColony);
 
 		void createTextureBuffer();
 		void createPixelBuffers();
-		VAO* createPheromoneComponents();
+		void createPheromoneComponents();
 		void swapPixelBuffers(vector<uint8_t> pheromoneMatrix);
-		void drawPheromone(vector<uint8_t> pheromoneMatrix, Camera* camera);
+
+		void drawPheromone(vector<uint8_t> pheromoneMatrix);
+		void drawAnts(AntColony* antColony);
+
 };
 
 #endif

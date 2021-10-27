@@ -2,14 +2,15 @@
 
 #include <camera.h>
 
+
 // settings constants
 
 // Environment
 //unsigned int WIND_WIDTH  = 1000;
 //unsigned int WIND_HEIGHT = 1000;
-unsigned int SCR_WIDTH  = 3000;
-unsigned int SCR_HEIGHT = 3000;
-unsigned int POP_SIZE   = 1000000	;
+unsigned int SCR_WIDTH  = 400;
+unsigned int SCR_HEIGHT = 400;
+unsigned int POP_SIZE   = 50000;
 unsigned int GLOBAL_SEED = 6454848;
 
 

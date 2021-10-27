@@ -6,13 +6,13 @@ SRC 	= src/
 SRC_IMGUI = extern/imgui/
 
 FILES_IMGUI = imgui imgui_demo imgui_draw imgui_tables imgui_widgets backends/imgui_impl_glfw backends/imgui_impl_opengl3
-FILES = main ant antColony environment render/EBO render/VBO render/VAO render/openglBuffersManager render/openglContext utils/constants utils/glad window/UI window/camera 
+FILES = main ant antColony environment foodsource render/EBO render/VBO render/VAO render/openglBuffersManager render/openglContext utils/constants utils/glad window/UI window/camera 
 
 INCLUDES = ./include
 INCLUDES_IMGUI = ./extern/imgui
 
 LIBRARIES = -lGL -lglfw -lX11 -lpthread -lXrandr -lXi -ldl -lm
-OPTIONS = -g -O3 -march=native # -g #-Wall
+OPTIONS = -g -O3 -pg -march=native -Wall
 
 SOURCES=$(patsubst %, ${SRC}%.cpp, ${FILES})
 HEADERS=$(patsubst %, ${SRC}%.h, ${FILES})
