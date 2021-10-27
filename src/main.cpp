@@ -121,9 +121,6 @@ int main()
 
             break;
         }
-
-        //
-        //
     }
 
     openglContext->end();

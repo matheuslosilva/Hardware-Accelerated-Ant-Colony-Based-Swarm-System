@@ -12,7 +12,7 @@ INCLUDES = ./include
 INCLUDES_IMGUI = ./extern/imgui
 
 LIBRARIES = -lGL -lglfw -lX11 -lpthread -lXrandr -lXi -ldl -lm
-OPTIONS = -g -O3 -pg -march=native -Wall
+OPTIONS = -g -O3 -march=native #-Wall -pg
 
 SOURCES=$(patsubst %, ${SRC}%.cpp, ${FILES})
 HEADERS=$(patsubst %, ${SRC}%.h, ${FILES})
@@ -36,4 +36,7 @@ run:
 
 clean:
 	@rm obj/*.o
-
+	@rm obj/backends/*.o
+	@rm obj/utils/*.o
+	@rm obj/render/*.o
+	@rm obj/window/*.o
