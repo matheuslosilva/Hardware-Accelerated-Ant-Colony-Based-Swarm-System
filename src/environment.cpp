@@ -1,13 +1,22 @@
 #include <environment.h>
 
-Environment::Environment(int pheromoneMatrixUpdatePixelsFrameRate, int pheromoneEvaporationFrameRate)
+Environment::Environment(int pheromoneMatrixUpdatePixelsFrameRate, int pheromoneEvaporationFrameRate,  OpenglBuffersManager* openglBuffersManager)
 {
 	for(int i = 0; i < DATA_SIZE; i++) pheromoneMatrix[i] = 0;
 	this->pheromoneMatrixUpdatePixelsFrameRate = pheromoneMatrixUpdatePixelsFrameRate;
 	this->pheromoneEvaporationFrameRate = pheromoneEvaporationFrameRate;
 
-	numberOfNests = 0;
-	numberOfFoods = 0;
+	Nests.push_back(new AntColony(400, -0.1f , 0.0f, 0));
+	foodSources.push_back(new FoodSource(0, 0.3f , 0.0f, 0));
+
+	openglBuffersManager->createNestComponents(Nests[0]);
+
+    openglBuffersManager->createAntsComponents(Nests[0]);
+
+    openglBuffersManager->createFoodComponents(foodSources[0]);
+
+	numberOfNests = 1;
+	numberOfFoods = 1;
 }
 
 void Environment::resetEnvironment()
@@ -18,6 +27,7 @@ void Environment::resetEnvironment()
 	numberOfFoods = 0;
 	for(int i = 0; i < DATA_SIZE; i++) pheromoneMatrix[i] = 0;
 }
+
 void Environment::createNest(UI* userInterface, OpenglBuffersManager* openglBuffersManager)
 {
 	if(userInterface->nestPosX == 0 && userInterface->nestPosY == 0)	

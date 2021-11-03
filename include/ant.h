@@ -15,6 +15,7 @@ using namespace std;
 enum States
 {
 	EXPLORER,
+	EXPLORER2,
 	CARRIER,
 	NESTCARRIER,
 	PERFECTCARRIER,

@@ -13,10 +13,9 @@ using namespace std;
 
 int main()
 {
+    
     srand(GLOBAL_SEED);
-
-    Environment* environment = new Environment(7, 15);
-
+    
     OpenglContext* openglContext = new OpenglContext();
 
     UI* userInterface = new UI();
@@ -29,6 +28,7 @@ int main()
 
     OpenglBuffersManager* openglBuffersManager =  new OpenglBuffersManager();
 
+    Environment* environment = new Environment(7, 15, openglBuffersManager);
 
     int openGlRenderUpdateFrameRate = 5;
 
@@ -39,8 +39,10 @@ int main()
         switch(userInterface->stateSimulation)
         {
             case STOPPED:
+
                 environment->resetEnvironment();
                 openglBuffersManager->resetBufferManager();
+
                 while(userInterface->stateSimulation == STOPPED && !glfwWindowShouldClose(openglContext->antColonyWindow))
                 {
                     openglContext->pre_render(); // Framecounter++ here
@@ -70,6 +72,8 @@ int main()
             break;
 
             case RUNNING:
+
+                
 
                 while(userInterface->stateSimulation == RUNNING && !glfwWindowShouldClose(openglContext->antColonyWindow))
                 {

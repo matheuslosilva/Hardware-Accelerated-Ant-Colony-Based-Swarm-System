@@ -3,15 +3,18 @@
 
 /* 
 	TODO LIST:
-
+	
+	CONSERTAR SEED
+	FAZER A FORMIGA IR ATE O CENTRO ANTES DE VOLTAR 
 	1- range para que o sensor perceba o ninho e a comida (feromonio da comida e do ninho)
 	2- Timeout/lifetime voltar a ser explorer
 	3- Se explorer encontrar trilha verde vira nestcarriercopia
+
 */
 Ant::Ant(float x, float y, float theta, float size, float velocity, float placedPheromoneIntensity)
 {
-	_x = x + (float)(rand()%100-50)/SCR_WIDTH;
-	_y = y + (float)(rand()%100-50)/SCR_HEIGHT;
+	_x = x; //+ (float)(rand()%100-50)/SCR_WIDTH;
+	_y = y; //+ (float)(rand()%100-50)/SCR_HEIGHT;
 
 	_xSensorR =0;
 	_ySensorR = 0;
@@ -84,7 +87,8 @@ void Ant::environmentAnalysis(int viewFrequency, vector<uint8_t> &pheromoneMatri
 			_lifeTime = 0;
 			//_x = posXNest;
 			//_y = posYNest;
-			_state = EXPLORER;
+			_state = EXPLORER2;
+			_theta += glm::radians((float)(180.0f));
 		}
 		int rSensorRedPheromoneDetected = 0;
 		int lSensorRedPheromoneDetected = 0;
@@ -191,6 +195,51 @@ void Ant::changeState(float posXNest, float posYNest, vector < FoodSource* > foo
 				_lifeTime = 0;
 			}
 		
+			 	
+		break;
+
+		case EXPLORER2:
+			_state = EXPLORER2;
+			_pheromoneType = -1;
+			_placePheromoneIntensity = 60; // TODO
+
+			if(rG > 0 || lG > 0)
+			{
+				_state = FOLLOWGREEN;
+				_pheromoneType = -1;
+			}
+			
+			if(rR > lR)
+				_theta += glm::radians((float)(rand()%360)/6.0f)*0.4f;
+			else  if(rR < lR)
+				_theta -= glm::radians((float)(rand()%360)/6.0f)*0.4f;
+
+			
+
+			if(foodColision(foodSources))
+			{
+				_state = CARRIER;
+				_pheromoneType = 2;
+				_placePheromoneIntensity = 20;
+
+				_carryingFood = true;
+				_theta += glm::radians((float)(180.0f));	
+				_lifeTime = 0;
+			}
+			
+			if( _x >= (posXNest-(float)(25.0f/SCR_WIDTH)) 
+			 && _x <= (posXNest+(float)(25.0f/SCR_WIDTH)) 
+			 && _y >= (posYNest-(float)(25.0f/SCR_WIDTH))
+			 && _y <= (posYNest+(float)(25.0f/SCR_WIDTH)))
+			{
+				_state = EXPLORER;
+				_pheromoneType = 1;
+				_placePheromoneIntensity = 60;
+				
+				_carryingFood = false;			
+				_theta += glm::radians((float)(180.0f));
+				_lifeTime = 0;
+			}
 			 	
 		break;
 

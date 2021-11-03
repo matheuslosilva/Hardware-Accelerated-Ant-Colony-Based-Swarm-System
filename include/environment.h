@@ -30,10 +30,10 @@ class Environment
 
 	public:
 
-		Environment(int pheromoneMatrixUpdatePixelsFrameRate, int pheromoneEvaporationFrameRate);
+		Environment(int pheromoneMatrixUpdatePixelsFrameRate, int pheromoneEvaporationFrameRate, OpenglBuffersManager* openglBuffersManager);
 
 		void resetEnvironment();
-		
+
 		void createNest(UI* userInterface, OpenglBuffersManager* openglBuffersManager);
 		void createFoodSource(UI* userInterface, OpenglBuffersManager* openglBuffersManager);
 
