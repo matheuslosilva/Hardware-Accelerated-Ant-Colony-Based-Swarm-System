@@ -6,8 +6,9 @@
 #include <VBO.h>
 #include <shader.h>
 #include <camera.h>
-#include <antColony.h>
+#include <ant.h>
 #include <foodsource.h>
+
 
 using namespace std;
 

@@ -4,14 +4,14 @@
 /* 
 	TODO LIST:
 	
-	CONSERTAR SEED
-	FAZER A FORMIGA IR ATE O CENTRO ANTES DE VOLTAR 
-	1- range para que o sensor perceba o ninho e a comida (feromonio da comida e do ninho)
-	2- Timeout/lifetime voltar a ser explorer
-	3- Se explorer encontrar trilha verde vira nestcarriercopia
+	1 - CONSERTAR SEED - OK
+	2 - FAZER A FORMIGA IR ATE O CENTRO ANTES DE VOLTAR OK
+	3 - range para que o sensor perceba o ninho e a comida (feromonio da comida e do ninho) OK
+	4 - Timeout/lifetime voltar a ser explorer OK
+	5 - Se explorer encontrar trilha verde vira nestcarriercopia OK
 
 */
-Ant::Ant(float x, float y, float theta, float size, float velocity, float placedPheromoneIntensity)
+Ant::Ant(float x, float y, float theta, float size, float velocity)
 {
 	_x = x; //+ (float)(rand()%100-50)/SCR_WIDTH;
 	_y = y; //+ (float)(rand()%100-50)/SCR_HEIGHT;
@@ -26,7 +26,7 @@ Ant::Ant(float x, float y, float theta, float size, float velocity, float placed
 	_size = size;
 	_velocity = velocity;
 	_pheromoneType = 1;
-	_placePheromoneIntensity = placedPheromoneIntensity;
+	_placePheromoneIntensity = 60;
 	_state = EXPLORER;
 	_lifeTime = 0;
 }
@@ -47,15 +47,6 @@ void Ant::move(int l)
 
 	_xSensorR = _x + 0.02*cosLookup[angle]; // 1 pixel = 0.005 in size
 	_ySensorR = _y + 0.02*sinLookup[angle];
-	/*
-		   O         O	
-			    
-				
-				
-		    	    			
-				X
-	*/
-
 
 	angle = (int)(((_theta-M_PI/4)/M_PI)*1800);
 	if(angle < 0) angle += 3600;
@@ -78,18 +69,10 @@ void Ant::move(int l)
 
 }
 
-void Ant::environmentAnalysis(int viewFrequency, vector<uint8_t> &pheromoneMatrix, float posXNest, float posYNest, vector<FoodSource*> foodSources)
+void Ant::environmentAnalysis(int viewFrequency, vector<uint8_t> &pheromoneMatrix, vector<AntColony*> antColonies, vector<FoodSource*> foodSources)
 {
 	if(viewFrequency % 30 == 0)
 	{
-		if(_lifeTime >= 2000)
-		{
-			_lifeTime = 0;
-			//_x = posXNest;
-			//_y = posYNest;
-			_state = EXPLORER2;
-			_theta += glm::radians((float)(180.0f));
-		}
 		int rSensorRedPheromoneDetected = 0;
 		int lSensorRedPheromoneDetected = 0;
 		int rSensorBluePheromoneDetected = 0;
@@ -137,7 +120,7 @@ void Ant::environmentAnalysis(int viewFrequency, vector<uint8_t> &pheromoneMatri
 		//lSensorBluePheromoneDetected +=  (rand()%6)-3;
 		//lSensorGreenPheromoneDetected +=  (rand()%6)-3;
 
-		changeState(posXNest, posYNest, foodSources, 
+		makeDecision(antColonies, foodSources, 
 			lSensorRedPheromoneDetected, lSensorGreenPheromoneDetected, lSensorBluePheromoneDetected, 
 			rSensorRedPheromoneDetected, rSensorGreenPheromoneDetected, rSensorBluePheromoneDetected);
 		
@@ -154,91 +137,120 @@ bool Ant::foodColision(vector<FoodSource*> foodSources)
 {
 	for(int i = 0; i < foodSources.size(); i++)
 	{
-		if(foodSources[i]->antColision(_x, _y)) return true;
+		if(foodSources[i]->antColision(_x, _y))
+		{
+			_x = foodSources[i]->posX;
+			_y = foodSources[i]->posY;
+			_carryingFood = true;	
+			return true;
+		}
 	}
 	return false;
 }
 
-void Ant::changeState(float posXNest, float posYNest, vector < FoodSource* > foodSources, int lR, int lG, int lB, int rR, int rG, int rB)
+bool Ant::nestColision(vector<AntColony*> antColonies)
 {
-	/*
+	for(int i = 0; i < antColonies.size(); i++)
+	{
+		if(antColonies[i]->antColision(_x, _y))
+		{
+			_x = antColonies[i]->posX;
+			_y = antColonies[i]->posY;
+			_carryingFood = false;
+			return true;
+		}
+	}
+	return false;
+}
 
-*/
+void Ant::changeState(States newState)
+{
+	switch(newState)
+	{
+		case EXPLORER:
+
+			_state = EXPLORER;
+			_pheromoneType = 1;
+			_placePheromoneIntensity = 60; 
+			 	
+		break;
+
+		case BACKHOME:
+			_theta += glm::radians((float)(180.0f));
+			_state = BACKHOME;
+			_pheromoneType = -1;
+			 	
+		break;
+
+		case CARRIER:
+
+			_state = CARRIER;
+			_pheromoneType = 2;
+			_placePheromoneIntensity = 60;
+
+		break;
+
+		case NESTCARRIER:
+
+			_state = NESTCARRIER;
+			_pheromoneType = 2;
+			_placePheromoneIntensity = 120;		
+
+		break;
+
+		case FOLLOWGREEN:
+
+			_state = FOLLOWGREEN;
+			_pheromoneType = -1;
+
+		break;
+
+		default:
+		break;
+	}
+}
+
+void Ant::makeDecision(vector<AntColony*> antColonies, vector < FoodSource* > foodSources, int lR, int lG, int lB, int rR, int rG, int rB)
+{
 	switch(_state)
 	{
 		case EXPLORER:
-			_state = EXPLORER;
-			_pheromoneType = 1;
-			_placePheromoneIntensity = 60; // TODO
-
-			if(rG > 0 || lG > 0)
-			{
-				_state = FOLLOWGREEN;
-				_pheromoneType = -1;
-			}
-			
+	
 			if(rR > lR)
 				_theta -= glm::radians((float)(rand()%360)/6.0f)*0.4f;
 			else  if(rR < lR)
 				_theta += glm::radians((float)(rand()%360)/6.0f)*0.4f;
 
-			
+			if(rG > 0 || lG > 0)
+			{
+				changeState(FOLLOWGREEN);
+			}
 
 			if(foodColision(foodSources))
 			{
-				_state = CARRIER;
-				_pheromoneType = 2;
-				_placePheromoneIntensity = 20;
-
-				_carryingFood = true;
 				_theta += glm::radians((float)(180.0f));	
 				_lifeTime = 0;
+
+				changeState(CARRIER);
 			}
 		
 			 	
 		break;
 
-		case EXPLORER2:
-			_state = EXPLORER2;
-			_pheromoneType = -1;
-			_placePheromoneIntensity = 60; // TODO
+		case BACKHOME:
 
-			if(rG > 0 || lG > 0)
-			{
-				_state = FOLLOWGREEN;
-				_pheromoneType = -1;
-			}
-			
 			if(rR > lR)
 				_theta += glm::radians((float)(rand()%360)/6.0f)*0.4f;
 			else  if(rR < lR)
 				_theta -= glm::radians((float)(rand()%360)/6.0f)*0.4f;
-
 			
-
-			if(foodColision(foodSources))
-			{
-				_state = CARRIER;
-				_pheromoneType = 2;
-				_placePheromoneIntensity = 20;
-
-				_carryingFood = true;
-				_theta += glm::radians((float)(180.0f));	
+			if(nestColision(antColonies))
+			{			
+				_theta += glm::radians((float)(rand()%360)/6.0f)*0.4f;
+				_theta -= glm::radians((float)(rand()%360)/6.0f)*0.4f;
 				_lifeTime = 0;
-			}
-			
-			if( _x >= (posXNest-(float)(25.0f/SCR_WIDTH)) 
-			 && _x <= (posXNest+(float)(25.0f/SCR_WIDTH)) 
-			 && _y >= (posYNest-(float)(25.0f/SCR_WIDTH))
-			 && _y <= (posYNest+(float)(25.0f/SCR_WIDTH)))
-			{
-				_state = EXPLORER;
-				_pheromoneType = 1;
-				_placePheromoneIntensity = 60;
-				
-				_carryingFood = false;			
-				_theta += glm::radians((float)(180.0f));
-				_lifeTime = 0;
+
+				changeState(EXPLORER);
 			}
 			 	
 		break;
@@ -255,53 +267,35 @@ void Ant::changeState(float posXNest, float posYNest, vector < FoodSource* > foo
 			else if(rR < lR)
 				_theta -= glm::radians((float)(rand()%360)/6.0f)*0.4f;
 
-
-			if( _x >= (posXNest-(float)(25.0f/SCR_WIDTH)) 
-			 && _x <= (posXNest+(float)(25.0f/SCR_WIDTH)) 
-			 && _y >= (posYNest-(float)(25.0f/SCR_WIDTH))
-			 && _y <= (posYNest+(float)(25.0f/SCR_WIDTH)))
-			{
-				_state = NESTCARRIER;
-				_pheromoneType = 2;
-				_placePheromoneIntensity = 100;
-				
-				_carryingFood = false;			
+			if(nestColision(antColonies))
+			{				
 				_theta += glm::radians((float)(180.0f));
 				_lifeTime = 0;
+				
+				changeState(NESTCARRIER);
 			}
 
 		break;
 
 		case NESTCARRIER:
+
 			if(rG  > lG)
 				_theta += glm::radians((float)(rand()%360)/6.0f)*0.4f;
 			else if(rG < lG)
 				_theta -= glm::radians((float)(rand()%360)/6.0f)*0.4f;
 			
-			if( _x >= (posXNest-(float)(25.0f/SCR_WIDTH)) 
-			 && _x <= (posXNest+(float)(25.0f/SCR_WIDTH)) 
-			 && _y >= (posYNest-(float)(25.0f/SCR_WIDTH))
-			 && _y <= (posYNest+(float)(25.0f/SCR_WIDTH)))
+			if(_carryingFood == true && nestColision(antColonies))
 			{
-				if(_carryingFood == true)
-				{
-					_lifeTime = 0;
-					_theta += glm::radians((float)(180.0f));
-				}
-				_placePheromoneIntensity = 100;
-				_carryingFood = false;		
+				_lifeTime = 0;	
+				_theta += glm::radians((float)(180.0f));
+				_placePheromoneIntensity = 100;	
 			}
 
-			else if(foodColision(foodSources))
+			else if(_carryingFood == false && foodColision(foodSources))
 			{
-				if(_carryingFood == false)
-				{
-					_lifeTime = 0;
-					_theta += glm::radians((float)(180.0f));
-				}
+				_lifeTime = 0;
+				_theta += glm::radians((float)(180.0f));
 				_placePheromoneIntensity = 200;
-				_carryingFood = true;
-					
 			}
 			
 
@@ -314,56 +308,25 @@ void Ant::changeState(float posXNest, float posYNest, vector < FoodSource* > foo
 			else if(rG < lG)
 				_theta -= glm::radians((float)(rand()%360)/6.0f)*0.4f;
 			
-			if( _x >= (posXNest-(float)(25.0f/SCR_WIDTH)) 
-			 && _x <= (posXNest+(float)(25.0f/SCR_WIDTH)) 
-			 && _y >= (posYNest-(float)(25.0f/SCR_WIDTH))
-			 && _y <= (posYNest+(float)(25.0f/SCR_WIDTH)))
-			{
-				_state = EXPLORER;
-				_pheromoneType = 1;
-				_placePheromoneIntensity = 60; // TODO
-				_lifeTime = 0;
-
-				if(_carryingFood == true)
-				{
-					_theta += glm::radians((float)(180.0f));
-				}
-				_carryingFood = false;	
+			if(nestColision(antColonies))
+			{	
+				changeState(EXPLORER);
 			}
 
 			else if(foodColision(foodSources))
 			{
-				_state = CARRIER;
-				_pheromoneType = 2;
-				_placePheromoneIntensity = 20;
-				_lifeTime = 0;
-
-				if(_carryingFood == false)
-				{
-					_theta += glm::radians((float)(180.0f));
-				}
-				_carryingFood = true;		
+				changeState(CARRIER);		
 			}
 
 		break;
+	}
 
-		default:
-
-		break;
+	//if(_lifeTime%50 == 0) _placePheromoneIntensity = max(0, _placePheromoneIntensity - (int)(_lifeTime*0.0025));
+	if(_lifeTime >= 2500)
+	{
+		_lifeTime = 0;
+		if(_state != BACKHOME) changeState(BACKHOME);
 	}
 }
-void Ant::putPheromone(int* pheromoneMatrix)
-{
 
-}
-
-void Ant::draw()
-{
-
-}
-
-void Ant::run()
-{
-
-}
 	

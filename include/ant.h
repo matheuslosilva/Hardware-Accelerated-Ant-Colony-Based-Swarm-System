@@ -9,13 +9,14 @@
 #include <vector>
 #include <sinCosLookup.h>
 #include <foodsource.h>
+#include <antColony.h>
 
 using namespace std;
 
 enum States
 {
 	EXPLORER,
-	EXPLORER2,
+	BACKHOME,
 	CARRIER,
 	NESTCARRIER,
 	PERFECTCARRIER,
@@ -38,7 +39,7 @@ class Ant
 		
 		
 		float _velocity;
-		float _placePheromoneIntensity;
+		int _placePheromoneIntensity;
 		int   _pheromoneType;
 		glm::vec3 _color;
 
@@ -50,20 +51,17 @@ class Ant
 		
 
 	public:
-		Ant(float x, float y, float theta, float size, float velocity, float placePheromoneIntensity);
+		Ant(float x, float y, float theta, float size, float velocity);
 
 		
 		//int getChoice() const { return _choice; }
 		//enum State { REST, SEARCH_NEW_NESTBOX, FIND_NESTBOX, BACK_TO_HOME, DANCE };
 		//State getState() const { return _state; }
-		void environmentAnalysis(int viewFrequency, vector<uint8_t> &pheromoneMatrix, float posXN, float posYN, vector<FoodSource*> foodSources);
+		void environmentAnalysis(int viewFrequency, vector<uint8_t> &pheromoneMatrix, vector<AntColony*> antColonies, vector<FoodSource*> foodSources);
+		bool nestColision(vector<AntColony*> antColonies);
 		bool foodColision(vector<FoodSource*> foodSources);
-		void changeState(float posXN, float posYN, vector<FoodSource*> foodSources,  int lR, int lG, int lB, int rR, int rG, int rB);
-		void putPheromone(int* pheromoneMatrix);
+		void changeState(States newState);
+		void makeDecision(vector<AntColony*> antColonies, vector<FoodSource*> foodSources,  int lR, int lG, int lB, int rR, int rG, int rB);
 		void move(int l);
-		void draw();
-		void run();
-	
-
 };
 #endif

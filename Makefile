@@ -11,7 +11,7 @@ FILES = main ant antColony environment foodsource render/EBO render/VBO render/V
 INCLUDES = ./include
 INCLUDES_IMGUI = ./extern/imgui
 
-LIBRARIES = -lGL -lglfw -lX11 -lpthread -lXrandr -lXi -ldl -lm
+LIBRARIES = -lGL -lglfw -lX11 -lpthread -lXrandr -ldl -lm #-lXi
 OPTIONS = -g -O3 -march=native #-Wall -pg
 
 SOURCES=$(patsubst %, ${SRC}%.cpp, ${FILES})

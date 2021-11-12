@@ -1,22 +1,48 @@
 #include <environment.h>
 
-Environment::Environment(int pheromoneMatrixUpdatePixelsFrameRate, int pheromoneEvaporationFrameRate,  OpenglBuffersManager* openglBuffersManager)
+Environment::Environment(int pheromoneMatrixUpdatePixelsFrameRate, int pheromoneEvaporationFrameRate)
 {
 	for(int i = 0; i < DATA_SIZE; i++) pheromoneMatrix[i] = 0;
 	this->pheromoneMatrixUpdatePixelsFrameRate = pheromoneMatrixUpdatePixelsFrameRate;
 	this->pheromoneEvaporationFrameRate = pheromoneEvaporationFrameRate;
+}
 
-	Nests.push_back(new AntColony(400, -0.1f , 0.0f, 0));
-	foodSources.push_back(new FoodSource(0, 0.3f , 0.0f, 0));
+void Environment::initializeEnvironment(OpenglBuffersManager* openglBuffersManager)
+{
+	/*
+	int numberOfAnts	=	400;
+	float nestPosX 		=	-0.1f;
+	float nestPosY 		=	0.0f;
+	float nestSize 		=	10.0f; //this is equal 20X20 square of pixels
+	float nestID 		=	0;
+
+	int foodAmount		= 	0; // TODO
+	float foodPosX 		=  	0.2f;
+	float foodPosY  	=	0.0f;
+	float foodSize 		=	10.0f;
+	float foodID		=	0;
+
+	Nests.push_back(new AntColony(numberOfAnts, nestPosX, nestPosY, nestSize, nestID));
+	foodSources.push_back(new FoodSource(foodAmount, foodPosX, foodPosY, foodSize, foodID));
+	*/
+
+	Nests.push_back(new AntColony(100	, 0.0, 0.0, 10.0, 0));
+	foodSources.push_back(new FoodSource(0, -0.25, -0.25, 10.0, 0));
+	foodSources.push_back(new FoodSource(0, 0.25, -0.25, 10.0, 1));
+	foodSources.push_back(new FoodSource(0, -0.25, 0.25, 10.0, 2));
+	foodSources.push_back(new FoodSource(0, 0.25, 0.25, 10.0, 3));
 
 	openglBuffersManager->createNestComponents(Nests[0]);
 
     openglBuffersManager->createAntsComponents(Nests[0]);
 
     openglBuffersManager->createFoodComponents(foodSources[0]);
+    openglBuffersManager->createFoodComponents(foodSources[1]);
+    openglBuffersManager->createFoodComponents(foodSources[2]);
+    openglBuffersManager->createFoodComponents(foodSources[3]);
 
 	numberOfNests = 1;
-	numberOfFoods = 1;
+	numberOfFoods = 4;
 }
 
 void Environment::resetEnvironment()
@@ -30,10 +56,7 @@ void Environment::resetEnvironment()
 
 void Environment::createNest(UI* userInterface, OpenglBuffersManager* openglBuffersManager)
 {
-	if(userInterface->nestPosX == 0 && userInterface->nestPosY == 0)	
-		Nests.push_back(new AntColony(userInterface->nOfAnts, -0.1f , (float)userInterface->nestPosY, numberOfNests));
-	else
-		Nests.push_back(new AntColony(userInterface->nOfAnts, (float)userInterface->nestPosX/SCR_WIDTH, (float)userInterface->nestPosY/SCR_HEIGHT, numberOfNests));
+	Nests.push_back(new AntColony(userInterface->nOfAnts, (float)userInterface->nestPosX/SCR_WIDTH, (float)userInterface->nestPosY/SCR_HEIGHT,10.0, numberOfNests));
 
 	openglBuffersManager->createNestComponents(Nests[numberOfNests]);
 
@@ -44,10 +67,7 @@ void Environment::createNest(UI* userInterface, OpenglBuffersManager* openglBuff
 
 void Environment::createFoodSource(UI* userInterface, OpenglBuffersManager* openglBuffersManager)
 {
-	if(userInterface->foodPosX == 0 && userInterface->foodPosY == 0)	
-		foodSources.push_back(new FoodSource(userInterface->foodAmount, 0.3f , (float)userInterface->foodPosY, numberOfFoods));
-	else
-		foodSources.push_back(new FoodSource(userInterface->foodAmount,(float) userInterface->foodPosX/SCR_WIDTH, (float)userInterface->foodPosY/SCR_HEIGHT, numberOfFoods));
+	foodSources.push_back(new FoodSource(userInterface->foodAmount,(float) userInterface->foodPosX/SCR_WIDTH, (float)userInterface->foodPosY/SCR_HEIGHT,  10.0, numberOfFoods));
 
 	openglBuffersManager->createFoodComponents(foodSources[numberOfFoods]);
 
@@ -86,7 +106,14 @@ void Environment::moveAnts(int frameCounter)
 {
 	for(int i = 0; i < numberOfNests; i++)
 	{
-		Nests[i]->moveAnts(frameCounter, pheromoneMatrix, foodSources);
+		AntColony* actualNest = Nests[i];
+		for(int i = 0; i < actualNest->numberOfAnts; i++)
+	    {      
+	        //cout<<endl; 
+			actualNest->ants[i]->move(frameCounter);
+
+	        actualNest->ants[i]->environmentAnalysis(frameCounter, pheromoneMatrix, Nests, foodSources);
+	    }
 	}
 }
 

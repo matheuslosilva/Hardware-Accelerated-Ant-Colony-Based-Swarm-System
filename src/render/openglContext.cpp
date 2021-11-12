@@ -85,6 +85,7 @@ void  OpenglContext::init()
     }
     
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(0);
     glfwSetScrollCallback(window, scroll_callback);
  
 

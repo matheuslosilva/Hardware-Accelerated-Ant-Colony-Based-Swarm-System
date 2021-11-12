@@ -2,7 +2,8 @@
 
 UI::UI()
 {
-    stateSimulation = STOPPED;
+    stateSimulation = STARTED;
+    turnOnGraphics = true;
 }
 
 void UI::init(GLFWwindow* window)
@@ -38,7 +39,8 @@ void UI::render()
     if(ImGui::Button("Close simulation")) stateSimulation = CLOSED;
 
     ImGui::Text("\n");
-   
+    
+
     ImGui::Checkbox("Turn On graphic simulation", &turnOnGraphics);
     //ImGui::Checkbox("Disable Camera movement", &disable_camera_movement);
 
@@ -46,6 +48,7 @@ void UI::render()
 
 
     ImGui::SliderInt("Number of ants", &nOfAnts, 10, 300000);
+    ImGui::SliderInt("Nest size", &nestSize, -20, 20);
     ImGui::SliderInt("Nest posX", &nestPosX, -halfScreenSize, halfScreenSize);
     ImGui::SliderInt("Nest posY", &nestPosY, -halfScreenSize, halfScreenSize);
     if(ImGui::Button("Place nest")) stateOfAction = PLACING_NEST;
@@ -53,6 +56,7 @@ void UI::render()
     ImGui::Text("\n");
 
     ImGui::SliderInt("Food amount", &foodAmount, 10, 1000000);
+    ImGui::SliderInt("Food size", &foodSize, -20, 20);
     ImGui::SliderInt("Food posX", &foodPosX, -halfScreenSize, halfScreenSize);
     ImGui::SliderInt("Food posY", &foodPosY, -halfScreenSize, halfScreenSize);
     if(ImGui::Button("Place food")) stateOfAction = PLACING_FOOD;

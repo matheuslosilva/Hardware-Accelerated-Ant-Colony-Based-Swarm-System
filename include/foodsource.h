@@ -12,8 +12,9 @@ class FoodSource
 		int foodAmount;
 
 		float posX, posY;
+		float size;
 
-		FoodSource(int food, float x, float y, int id);
+		FoodSource(int food, float x, float y, float newSize, int id);
 
 		bool antColision(float antPosx, float antPosY);
 

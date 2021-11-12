@@ -1,10 +1,11 @@
 #ifndef ANTCOLONY_H
 #define ANTCOLONY_H
 
-#include <ant.h>
-#include <foodsource.h>
 using namespace std;
-	
+#include <vector>
+#include <constants.h>
+class Ant;
+
 class AntColony 
 {
 	public:
@@ -13,12 +14,10 @@ class AntColony
 		int numberOfAnts;
 
 		float posX, posY;
+		float size;
 
-		AntColony(int numberAnts, float x, float y, int id);
-
-		glm::mat4* createAntsModelMatrices(vector<Ant*> antsColony);
-		void updateModelAnts();
-		void moveAnts(int l, vector<uint8_t> &pheromoneMatrix, vector<FoodSource*> foodSources);
+		AntColony(int numberAnts, float x, float y, float newSize, int id);
+		bool antColision(float antPosx, float antPosY);
 
 
 };

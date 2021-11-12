@@ -17,6 +17,7 @@ using namespace std;
 
 enum StateOfSimulation
 {
+	STARTED,
 	RUNNING,
 	PAUSED,
 	STOPPED,
@@ -38,10 +39,12 @@ class UI
     	bool disable_camera_movement;
 
     	int nOfAnts;
+    	int nestSize;
     	int nestPosX;
     	int nestPosY;
 
     	int foodAmount;
+    	int foodSize;
     	int foodPosX;
     	int foodPosY;
 

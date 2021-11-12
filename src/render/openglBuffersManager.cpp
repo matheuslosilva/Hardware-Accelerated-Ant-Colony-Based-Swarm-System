@@ -26,13 +26,13 @@ void OpenglBuffersManager::createFoodComponents(FoodSource* foodSource)
 {
     float Vertices[] = {
         // positions    
-        -0.05f,  0.05f, 
-         0.05f, -0.05f, 
-        -0.05f, -0.05f, 
+        -0.005f,  0.005f, 
+         0.005f, -0.005f, 
+        -0.005f, -0.005f, 
 
-        -0.05f,  0.05f, 
-         0.05f, -0.05f, 
-         0.05f,  0.05f, 
+        -0.005f,  0.005f, 
+         0.005f, -0.005f, 
+         0.005f,  0.005f, 
 
     };
     VBO VBOPositions(Vertices, sizeof(Vertices), GL_STATIC_DRAW);
@@ -49,7 +49,7 @@ void OpenglBuffersManager::createFoodComponents(FoodSource* foodSource)
     VBO VBOColors(Colors, sizeof(Colors), GL_STATIC_DRAW);
 
     glm::mat4 model = glm::mat4(1.0f);  
-    model = glm::scale(model, glm::vec3(0.8, 0.8, 0.8));
+    model = glm::scale(model, glm::vec3(foodSource->size, foodSource->size, 1.0));
     model[3][0] = (float)foodSource->posX;
     model[3][1] = (float)foodSource->posY;
     
@@ -91,13 +91,13 @@ void OpenglBuffersManager::createNestComponents(AntColony* antColony)
 {
     float Vertices[] = {
         // positions    
-        -0.05f,  0.05f, 
-         0.05f, -0.05f, 
-        -0.05f, -0.05f, 
+        -0.005f,  0.005f, 
+         0.005f, -0.005f, 
+        -0.005f, -0.005f, 
 
-        -0.05f,  0.05f, 
-         0.05f, -0.05f, 
-         0.05f,  0.05f, 
+        -0.005f,  0.005f, 
+         0.005f, -0.005f, 
+         0.005f,  0.005f, 
 
     };
     VBO VBOPositions(Vertices, sizeof(Vertices), GL_STATIC_DRAW);
@@ -114,7 +114,7 @@ void OpenglBuffersManager::createNestComponents(AntColony* antColony)
     VBO VBOColors(Colors, sizeof(Colors), GL_STATIC_DRAW);
 
     glm::mat4 model = glm::mat4(1.0f);  
-    model = glm::scale(model, glm::vec3(0.8, 0.8, 0.8));
+    model = glm::scale(model, glm::vec3(antColony->size, antColony->size, 1.0));
     model[3][0] = (float)antColony->posX;
     model[3][1] = (float)antColony->posY;
     
@@ -151,9 +151,8 @@ void OpenglBuffersManager::drawNests(int nNests)
         VAOsNest[i]->Unbind();
     }
 }
+
 //--------------ANTS------------------------
-
-
 void OpenglBuffersManager::createAntsModelMatrices(AntColony* antColony)
 {
     glm::mat4* modelMatrices = new glm::mat4[antColony->numberOfAnts];

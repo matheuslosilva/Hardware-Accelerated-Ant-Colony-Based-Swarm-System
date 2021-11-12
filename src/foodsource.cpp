@@ -1,20 +1,23 @@
 #include <foodsource.h>
 #include <constants.h>
 
-FoodSource::FoodSource(int food, float x, float y, int newId)
+FoodSource::FoodSource(int food, float x, float y, float newSize, int newId)
 {
     foodAmount = food;
     posX = x;
     posY = y;
+    size = newSize;
     id = newId;
 }
 
 bool FoodSource::antColision(float antPosx, float antPosY)
 {
-    if(    antPosx >= (posX-(float)(25.0f/SCR_WIDTH)) 
-        && antPosx <= (posX+(float)(25.0f/SCR_WIDTH)) 
-        && antPosY >= (posY-(float)(25.0f/SCR_WIDTH))
-        && antPosY <= (posY+(float)(25.0f/SCR_WIDTH)))
+    float range = (size / SCR_HEIGHT) * 2;
+    
+    if(    antPosx >= (posX-range) 
+        && antPosx <= (posX+range) 
+        && antPosY >= (posY-range)
+        && antPosY <= (posY+range))
         return true;
     else
         return false;      
