@@ -9,7 +9,6 @@
 	3 - range para que o sensor perceba o ninho e a comida (feromonio da comida e do ninho) OK
 	4 - Timeout/lifetime voltar a ser explorer OK
 	5 - Se explorer encontrar trilha verde vira nestcarriercopia OK
-
 */
 Ant::Ant(float x, float y, float theta, float size, float velocity)
 {
@@ -47,6 +46,10 @@ void Ant::move(int l)
 
 	_xSensorR = _x + 0.02*cosLookup[angle]; // 1 pixel = 0.005 in size
 	_ySensorR = _y + 0.02*sinLookup[angle];
+	//      X
+	//
+	//
+	//   O      O
 
 	angle = (int)(((_theta-M_PI/4)/M_PI)*1800);
 	if(angle < 0) angle += 3600;
@@ -176,6 +179,7 @@ void Ant::changeState(States newState)
 		break;
 
 		case BACKHOME:
+
 			_theta += glm::radians((float)(180.0f));
 			_state = BACKHOME;
 			_pheromoneType = -1;
@@ -274,8 +278,7 @@ void Ant::makeDecision(vector<AntColony*> antColonies, vector < FoodSource* > fo
 				
 				changeState(NESTCARRIER);
 			}
-
-		break;
+			break;
 
 		case NESTCARRIER:
 
@@ -297,12 +300,9 @@ void Ant::makeDecision(vector<AntColony*> antColonies, vector < FoodSource* > fo
 				_theta += glm::radians((float)(180.0f));
 				_placePheromoneIntensity = 200;
 			}
-			
-
-		break;
+			break;
 
 		case FOLLOWGREEN:
-
 			if(rG  > lG)
 				_theta += glm::radians((float)(rand()%360)/6.0f)*0.4f;
 			else if(rG < lG)
@@ -317,7 +317,6 @@ void Ant::makeDecision(vector<AntColony*> antColonies, vector < FoodSource* > fo
 			{
 				changeState(CARRIER);		
 			}
-
 		break;
 	}
 
