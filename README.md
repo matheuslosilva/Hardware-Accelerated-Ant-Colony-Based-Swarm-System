@@ -5,6 +5,19 @@ An evolutionary algorithm was implemented to optimize the ant swarm parameters i
 
 Hardware acceleration in CUDA and OpenGL provides the system with the ability to simulate a large number of agents simultaneously, in order to study the relevance of swarm size in the performance of a task objective.
 
+Step 1: clone this repository with `git clone https://github.com/matheuslosilva/Hardware-Accelerated-Ant-Colony-Based-Swarm-System --recursive`
+
+Step 2: Download the following dependencies
+
+GLFW (window calls) - GLM (math calls):
+https://www.glfw.org/download
+sudo apt-get install libglfw3-dev libglm-dev
+
+Step 3: change the current directory with `cd Hardware-Accelerated-Ant-Colony-Based-Swarm-System`
+
+Step 4: run `make`
+
+Step 5: run `make run`
 
 
 OpenGL and CUDA references used:
