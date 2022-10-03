@@ -1,9 +1,9 @@
 #ifndef VAO_H
 #define VAO_H
 
-#include<glad/glad.h>
-#include"VBO.h"
-#include<string>
+#include <VBO.h>
+#include <EBO.h>
+#include <string>
 
 class VAO
 {
@@ -14,16 +14,11 @@ class VAO
 		VAO();
 
 		// Links a VBO to the VAO using a certain layout
-		void LinkVBO(VBO& VBO, GLuint layout, GLuint size, GLenum type, GLsizei stride, GLvoid* pointer);
-		void LinkVBOMatrix4(VBO& VBO, GLuint layout, GLuint size, GLenum type, GLsizei stride);
-		// Binds the VAO
-		// -----------------------------------------------------------------------
-		void Bind();
-		// Unbinds the VAO
-		void Unbind();
-		// Deletes the VAO
-		void Delete();
-
-	
+		void linkVBO(VBO& VBO, GLuint layout, GLuint size, GLenum type, GLsizei stride, GLvoid* offset);
+		void linkVBOMatrix4(VBO& VBO, GLuint layout, GLuint size, GLenum type, GLsizei stride);
+		
+		void bind();
+		void unbind();
+		void erase();
 };
 #endif

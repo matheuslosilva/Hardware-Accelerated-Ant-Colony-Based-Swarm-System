@@ -1,45 +1,39 @@
 #ifndef OPENGLCONTEXT_H
 #define OPENGLCONTEXT_H
 
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <GLFW/glfw3.h>
-#include <string>
-#include <chrono>
-#include <iostream>
-#include <constants.h>
-#include <UI.h>
+#include <openglBuffersManager.h>
 
+#include <environment.h>
 
-using namespace std::chrono;
+typedef struct
+{
+	Camera *camera;
+    GLFWwindow *window;
+    UI* userInterface;
+}AdditionalCallbackParameters;
 
 class OpenglContext
 {
 	public:
-		GLFWwindow* antColonyWindow;
-		unsigned int frameCounter;
-		int mouseState;
-		
-		time_point<high_resolution_clock> startDebugTimer;
-	    time_point<high_resolution_clock> stopDebugTimer; 
-	    microseconds durationTimer; 
+		AdditionalCallbackParameters* AdditionalParameters;
 
+		GLFWwindow* swarmSimulatorWindow;
+		Camera* camera;
+		UI* userInterface;
+		Environment* environment;
+		ParameterAssigner* parameterAssigner;
+
+		unsigned int frameCounter;
+		int openGlRenderUpdateFrameRate;
 
 		OpenglContext();
-
-		void debugExecutionTimeStart();
-
-		void debugExecutionTimeStop(std::string debugText);
-
-
 		void  init();
-		void processInput(UI* userInterface);
+		void pollEvents();
+		void run(OpenglBuffersManager* openglBuffersManager);
 		void pre_render();
 		void post_render();
 		void end();
 };
-
 
 
 #endif

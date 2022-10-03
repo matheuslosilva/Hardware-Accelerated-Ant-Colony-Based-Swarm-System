@@ -1,0 +1,98 @@
+{
+    "randomSeed": 11847429,
+
+    "environment":
+    {
+        "placePheromoneRate": 1,
+        "pheromoneEvaporationRate": 15
+    },
+
+    "anthills":
+    [
+        {
+            "id": 0,
+            "posX": 0.0,
+            "posY": 0.006,
+            "size": 0.006,
+            "antEspecifications": [0],
+            "antAmounts": [1000],
+            "foodDelivered": 0
+
+        },
+        {
+            "id": 1,
+            "posX": 0.0,
+            "posY": 0.0,
+            "size": 0.006,
+            "antEspecifications": [0],
+            "antAmounts": [2000],
+            "foodDelivered" : 0
+        }
+    ],
+
+    "foodSources":
+    [
+        {
+            "id": 0,
+            "posX": -0.060,
+            "posY": 0.0,
+            "size": 0.006,
+            "foodAmount": 10000
+        },
+        {
+            "id": 1,
+            "posX": 0.060,
+            "posY": 0.0,
+            "size": 0.006,
+            "foodAmount": 10000
+        },
+        {
+            "id": 2,
+            "posX": 0.0,
+            "posY": -0.06,
+            "size": 0.006,
+            "foodAmount": 10000
+        },
+        {
+            "id": 3,
+            "posX": 0.0,
+            "posY": 0.06,
+            "size": 0.006,
+            "foodAmount": 10000
+        }
+    ],
+
+    "ants":
+    [
+        {
+            "antEspecification": 0,
+            "nestID": 0,
+            "size": 0.002,
+            "velocity": 0.0004,
+
+            "state": 0,
+            "pheromoneType": 0,
+            "placePheromoneIntensity": 60,
+            "lifeTime": 1250,
+            "viewFrequency": 1,
+
+            "antSensorParameters":
+            [
+                {
+                    "xCenterAntDistance": 0.004,
+                    "yCenterAntDistance": 0.004,
+                    "positionAngle": -45,
+                    "sensorPixelRadius": 2,
+                    "sensorType": 0
+                },
+                {
+                    "xCenterAntDistance": 0.004,
+                    "yCenterAntDistance": 0.004,
+                    "positionAngle": 45,
+                    "sensorPixelRadius": 2,
+                    "sensorType": 0
+                }
+            ]
+        }
+    ]
+}

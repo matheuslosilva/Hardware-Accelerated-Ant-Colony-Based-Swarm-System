@@ -1,57 +1,84 @@
 #ifndef OPENGLBUFFERSMANAGER_H
 #define OPENGLBUFFERSMANAGER_H
 
-#include <EBO.h>
-#include <VAO.h>
-#include <VBO.h>
 #include <shader.h>
-#include <camera.h>
-#include <ant.h>
-#include <foodsource.h>
+#include <VAO.h>
 
+#include <UI.h>
+#include <camera.h>
+
+#include <ant.h>
+
+// Pixel mapping (for pheromone)
+extern int    CHANNEL_COUNT;
+extern GLenum PIXEL_FORMAT;
+extern int    DATA_SIZE; // Size of the pixel data content
+extern GLuint pboIds[2]; // IDs of PBO
+extern GLuint textureId; // ID of texture
+extern int indexPBO;
+extern int nextIndexPBO;
 
 using namespace std;
 
+typedef struct
+{
+	glm::vec3 position;
+	glm::vec4 color;
+}ColorVertex;
+
+typedef struct
+{
+	glm::vec3 vertexPosition;
+	glm::vec2 texturePosition;
+}TextureVertex; 
+
 class OpenglBuffersManager
 {
-	
 	public:
 
 	  	Shader* shaderAnts;
 	    Shader* shaderPheromone;
 
-	    vector < VAO* > VAOsFood;
+	    vector <glm::mat4> foodsTransformationMatrices;
+	    VBO* foodsTransformationMatricesVBO;
+	    VAO* foodsVAO;
 
-	    vector < VAO* > VAOsNest;
+	    vector <glm::mat4> anthillsTransformationMatrices;
+	    VBO* anthillsTransformationMatricesVBO;
+	    VAO* anthillsVAO;
 
-	    vector < glm::mat4* > antsModelMatrices;
-	    vector < VBO* > antsMatricesBuffer;
-	    vector < VAO* > VAOsAnts;
+	    vector <glm::mat4> antsTransformationMatrices;
+	    VBO* antsTransformationMatricesVBO;
+	    VAO* antsVAO;
 
-	    VAO* VAOPheromone;    
+	    VAO* pheromoneVAO;    
 	    GLbitfield* pixelMap;  
-
-	  public:
 
 		OpenglBuffersManager();
 		void resetBufferManager();
+
+		void addElement(vector <glm::mat4>* transformationMatrices, float size, float theta, float posX, float posY);
+		void updateBuffer(VBO* vertexBufferObject, int numberOfElements, vector <glm::mat4> transformationMatrices, GLenum usage);
+		void updateBufferData(VBO* vertexBufferObject, int numberOfElements, vector <glm::mat4> transformationMatrices);
+
+		void createFoodComponents();
+		void drawFoods(int numberOfFoods, Camera* camera);
+	
+		void createAnthillComponents();
+		void drawAnthills(int numberOfAnthills, Camera* camera);
+
+		void createAntComponents();
+		void drawAnts(int numberOfAnts, Camera* camera);
 		
-		void createFoodComponents(FoodSource* foodSource);
-		void createNestComponents(AntColony* antColony);
-		void drawFoods(int nFoods);
-		void drawNests(int nNests);
 
-		void createAntsModelMatrices(AntColony* antsColony);
-		void createAntsComponents(AntColony* antColony);
-		void updateModelAnts(AntColony* antColony);
 
+		void updateModelAnts(int numberOfAnts, vector<Ant*> ants);
+
+		void createPheromoneComponents();
 		void createTextureBuffer();
 		void createPixelBuffers();
-		void createPheromoneComponents();
-		void swapPixelBuffers(vector<uint8_t> pheromoneMatrix);
-
-		void drawPheromone(vector<uint8_t> pheromoneMatrix);
-		void drawAnts(AntColony* antColony);
+		void swapPixelBuffers(uint8_t* pheromoneMatrix);
+		void drawPheromone(uint8_t* pheromoneMatrix, Camera* camera);
 
 };
 

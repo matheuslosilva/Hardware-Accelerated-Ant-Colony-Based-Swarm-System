@@ -1,63 +1,45 @@
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
-#include <bitset>
-
-#include <UI.h>
 #include <openglBuffersManager.h>
-#include <antColony.h>
-
-#include <constants.h>
-
-#include <foodsource.h>
-
-#include <vector>
 
 class Environment
 {
 	public:
-
-		vector<uint8_t> pheromoneMatrix = vector<uint8_t>(DATA_SIZE);
+		uint8_t* pheromoneMatrix;
 		
-		int pheromoneMatrixUpdatePixelsFrameRate;
-		int pheromoneEvaporationFrameRate;
+		ParameterAssigner* parameterAssigner;
+
+		int placePheromoneRate;
+		int pheromoneEvaporationRate;
 
 		int numberOfNests;
 		int numberOfFoods;
+		int numberOfAnts;
 
-		vector<AntColony*> Nests;
-		vector<FoodSource*> foodSources;
+		vector<Anthill*> nests;
+		vector<FoodSource*> foods;
+		vector<Ant*> ants;
 
 	public:
 
-		Environment(int pheromoneMatrixUpdatePixelsFrameRate, int pheromoneEvaporationFrameRate);
+		Environment(ParameterAssigner* parametersAssigner);
 
 		void initializeEnvironment(OpenglBuffersManager* openglBuffersManager);
 		void resetEnvironment();
 
-		void createNest(UI* userInterface, OpenglBuffersManager* openglBuffersManager);
-		void createFoodSource(UI* userInterface, OpenglBuffersManager* openglBuffersManager);
+		void createNest(int idNest, OpenglBuffersManager* openglBuffersManager);
+		void createFoodSource(int idFood, OpenglBuffersManager* openglBuffersManager);
+		void createAnt(int idNest, OpenglBuffersManager* openglBuffersManager);
 
-		void drawNests(OpenglBuffersManager* openglBuffersManager);
-		void drawFoods(OpenglBuffersManager* openglBuffersManager);
-		void draw(OpenglBuffersManager* openglBuffersManager);
+		void run(int frameCounter);
+		void draw(OpenglBuffersManager* openglBuffersManager, Camera* camera);
 
 		void moveAnts(int frameCounter);
 
-		void updatePheromonePixels(int frameCounter);
+		void placePheromone(int frameCounter);
 
 		void pheromoneEvaporation(int frameCounter);
-
-
-
-
-
-
 };
-
-
-
-
-
 
 #endif

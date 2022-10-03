@@ -1,0 +1,29 @@
+Setar posições novas como mouse
+salvar json de acordo com as modificaoes
+aba experimentos consumir pasta de experimentos
+salvar populações e gerações em jsons em cada experimento
+interface para algoritmo evolutivo
+	-montagem de cromossomo dinamica
+	-setar parametros 
+	-alterar parametros do meio pra frente da simulação
+	-armazenar todas as populações, para recuperação de dados e rerodagem de experimento
+	-arvore de pastas:
+		-experimento X
+			-Json do experimento inicial
+			-Evolutivo 1
+				-Json com parametros iniciais
+				Gerações
+					-G1
+					-G2
+					-G3
+						-Json individuo (swarm)1
+						-Json individuo (Swarm)2
+						...
+						-Json melhor individuo
+						-Json com alterações nos parametros no meio das gerações
+					-G4
+					...
+			-Evolutivo 2
+			...
+						
+

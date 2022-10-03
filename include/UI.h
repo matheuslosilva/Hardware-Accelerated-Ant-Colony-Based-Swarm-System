@@ -2,53 +2,67 @@
 #define UI_H
 
 #include <constants.h>
+
+#include <iostream>
+
+#include <GLFW/glfw3.h>
+#include <backends/imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
+
 using namespace std;
 
-
-#define	DOING_NOTHING 0
-#define	PLACING_NEST 1
-#define	PLACING_FOOD 2
-#define	DRAWING_OBSTACLES 3
-#define	DRAWING_PHEROMONE 4
-
+enum Actions
+{
+	DO_NOTHING,
+	ENVIRONMENT_INIT,
+	ADD_NEST,
+	MOUSE_ADD_NEST,
+	ADD_FOOD,
+	MOUSE_ADD_FOOD,
+	ADD_ANT,
+	MOUSE_ADD_ANT,
+};
 
 enum StateOfSimulation
 {
-	STARTED,
 	RUNNING,
 	PAUSED,
-	STOPPED,
+	RESET,
 	CLOSED
 };
 
 class UI 
 {
 	private:
+		
 
 	public:
 
 		StateOfSimulation stateSimulation;
-		int stateOfAction;
+		Actions UIAction;
 
 		int halfScreenSize;
 
 		bool turnOnGraphics;
-    	bool disable_camera_movement;
+    	bool turnOnCameraMovement;
 
-    	int nOfAnts;
-    	int nestSize;
-    	int nestPosX;
-    	int nestPosY;
+    	int placePheromoneRate;
+    	int pheromoneEvaporationRate;
+    	int openGlRenderUpdateFrameRate;
 
+    	float nestPosX;
+    	float nestPosY;
+    	float nestSize;
+    	int antAmount;
+
+    	float foodPosX;
+    	float foodPosY;
+    	float foodSize;
     	int foodAmount;
-    	int foodSize;
-    	int foodPosX;
-    	int foodPosY;
 
-		float mouseX, mouseY;
+    	int nestID;
 
 		UI();
 
@@ -59,5 +73,10 @@ class UI
 		void run();
 		void end();
 
+		void simulationControls();
+		void experimentsTab();
+		void antsRealTimeInteractionsTab();
+
 };
 #endif
+
