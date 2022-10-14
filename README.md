@@ -11,6 +11,7 @@ Step 1: clone this repository with `git clone https://github.com/matheuslosilva/
 Step 2: Download the following dependencies
 
 GLFW (window calls) - GLM (math calls): https://www.glfw.org/download `sudo apt-get install libglfw3-dev libglm-dev`
+No ARK linux => paru -S glfw-x11 glm
 
 Step 3: change the current directory with cd Hardware-Accelerated-Ant-Colony-Based-Swarm-System
 
