@@ -32,7 +32,7 @@ class Environment
 
 		Environment(int pheromoneMatrixUpdatePixelsFrameRate, int pheromoneEvaporationFrameRate);
 
-		void initializeEnvironment(OpenglBuffersManager* openglBuffersManager);
+		void initializeEnvironment(OpenglBuffersManager* openglBuffersManager, float antSpeed);
 		void resetEnvironment();
 
 		void createNest(UI* userInterface, OpenglBuffersManager* openglBuffersManager);

@@ -16,6 +16,9 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
+    float antSpeed = stoi(argv[1])/10000.0;
+    cout << antSpeed << endl;
+
     srand(GLOBAL_SEED);
     
     OpenglContext* openglContext = new OpenglContext();
@@ -31,7 +34,7 @@ int main(int argc, char** argv)
     OpenglBuffersManager* openglBuffersManager =  new OpenglBuffersManager();
 
     Environment* environment = new Environment(7, 40);
-    environment->initializeEnvironment(openglBuffersManager);
+    environment->initializeEnvironment(openglBuffersManager, antSpeed);
 
     int maxMovements = SIMULATION_PERIOD;
     int currentMovement = 0;

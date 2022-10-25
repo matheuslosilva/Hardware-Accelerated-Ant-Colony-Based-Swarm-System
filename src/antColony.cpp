@@ -20,6 +20,25 @@ AntColony::AntColony(int numberAnts, float x, float y, float newSize, int newid)
     }
 }
 
+AntColony::AntColony(int numberAnts, float x, float y, float newSize, int newid, float antSpeed)
+{
+    id = newid;
+    numberOfAnts = numberAnts;
+    posX = x;
+    posY = y;
+    size = newSize;
+    
+	for(int i = 0; i < numberOfAnts; i++)
+    {	
+        ants.push_back(new Ant(posX, posY, glm::radians((float)(rand()%360)), 0.10f, antSpeed));
+    }
+}
+
+
+
+
+
+
 bool AntColony::antColision(float antPosx, float antPosY)
 {  
     float range = (size / SCR_HEIGHT) * 2;
