@@ -6,13 +6,16 @@
 #include <iostream>
 #include <unistd.h>
 
+#define SIMULATION_PERIOD 1000
+
 unsigned int microsecond = 1000000;
 
 using namespace std::chrono;
 using namespace std;
 
-int main()
+int main(int argc, char** argv)
 {
+
     srand(GLOBAL_SEED);
     
     OpenglContext* openglContext = new OpenglContext();
@@ -30,11 +33,15 @@ int main()
     Environment* environment = new Environment(7, 40);
     environment->initializeEnvironment(openglBuffersManager);
 
+    int maxMovements = SIMULATION_PERIOD;
+    int currentMovement = 0;
+    bool maxReached = false;
+
     int openGlRenderUpdateFrameRate = 5;
 
     // render loop
     // -------------------------------------------------------------------
-    while (!glfwWindowShouldClose(openglContext->antColonyWindow) && userInterface->stateSimulation != CLOSED)
+    while (!glfwWindowShouldClose(openglContext->antColonyWindow) && userInterface->stateSimulation != CLOSED && !maxReached)
     {
         switch(userInterface->stateSimulation)
         {
@@ -93,8 +100,8 @@ int main()
 
                 while(userInterface->stateSimulation == RUNNING && !glfwWindowShouldClose(openglContext->antColonyWindow))
                 {
-                    //openglContext->debugExecutionTimeStart();
-                    
+                    //openglContext->d ebugExecutionTimeStart();
+                    currentMovement += 1;
                     openglContext->processInput(userInterface); 
 
                     environment->moveAnts(openglContext->frameCounter); // TODO CUDA
@@ -114,6 +121,12 @@ int main()
                     userInterface->run();
 
                     openglContext->post_render();
+
+                    if (currentMovement == maxMovements) {
+                        maxReached = true;
+                        std::cout << "something";
+                        break;
+                    }
                     
                     //openglContext->debugExecutionTimeStop("total");
 
