@@ -12,6 +12,7 @@ class AntColony
 		int id;
 		vector<Ant*> ants;
 		int numberOfAnts;
+		int food;
 
 		float posX, posY;
 		float size;

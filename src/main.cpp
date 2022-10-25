@@ -6,7 +6,7 @@
 #include <iostream>
 #include <unistd.h>
 
-#define SIMULATION_PERIOD 1000
+#define SIMULATION_PERIOD 10000
 
 unsigned int microsecond = 1000000;
 
@@ -124,7 +124,7 @@ int main(int argc, char** argv)
 
                     if (currentMovement == maxMovements) {
                         maxReached = true;
-                        std::cout << "something";
+                        std::cout << environment->Nests[0]->food;
                         break;
                     }
                     
