@@ -156,7 +156,10 @@ bool Ant::nestColision(vector<AntColony*> antColonies)
 	for(int i = 0; i < antColonies.size(); i++)
 	{
 		if(antColonies[i]->antColision(_x, _y))
-		{
+		{	
+			if (_carryingFood) {
+				antColonies[i]->food += 1;
+			}
 			_x = antColonies[i]->posX;
 			_y = antColonies[i]->posY;
 			_carryingFood = false;
