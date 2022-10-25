@@ -28,6 +28,7 @@ AntColony::AntColony(int numberAnts, float x, float y, float newSize, int newid,
     posX = x;
     posY = y;
     size = newSize;
+    food = 0;
     
 	for(int i = 0; i < numberOfAnts; i++)
     {	

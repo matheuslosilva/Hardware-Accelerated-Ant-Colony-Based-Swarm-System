@@ -17,7 +17,6 @@ int main(int argc, char** argv)
 {
 
     float antSpeed = stoi(argv[1])/10000.0;
-    cout << antSpeed << endl;
 
     srand(GLOBAL_SEED);
     
