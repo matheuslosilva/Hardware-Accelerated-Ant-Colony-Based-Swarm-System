@@ -28,6 +28,36 @@ Ant::Ant(float x, float y, float theta, float size, float velocity)
 	_placePheromoneIntensity = 60;
 	_state = EXPLORER;
 	_lifeTime = 0;
+
+	_explorerPheromoneIntensity = 60;
+	_carrierPheromoneIntensity = 60;
+	_nestCarrierPheromoneIntensity = 120;
+}
+
+Ant::Ant(float x, float y, float theta, float size, float velocity, int explorerPheromoneIntensity, int nestCarrierPheromoneIntensity, int carrierPheromoneIntensity)
+{
+	_x = x; //+ (float)(rand()%100-50)/SCR_WIDTH;
+	_y = y; //+ (float)(rand()%100-50)/SCR_HEIGHT;
+
+	_xSensorR =0;
+	_ySensorR = 0;
+
+	_xSensorL = 0;
+	_ySensorL = 0;
+
+	_theta = theta;
+	_size = size;
+	_velocity = velocity;
+	_pheromoneType = 1;
+	_placePheromoneIntensity = explorerPheromoneIntensity;
+	_state = EXPLORER;
+	_lifeTime = 0;
+
+	_explorerPheromoneIntensity = explorerPheromoneIntensity;
+	_nestCarrierPheromoneIntensity = nestCarrierPheromoneIntensity;
+	_carrierPheromoneIntensity = carrierPheromoneIntensity;
+
+
 }
 
 void Ant::move(int l)
@@ -177,7 +207,7 @@ void Ant::changeState(States newState)
 
 			_state = EXPLORER;
 			_pheromoneType = 1;
-			_placePheromoneIntensity = 60; 
+			_placePheromoneIntensity = _explorerPheromoneIntensity; 
 			 	
 		break;
 
@@ -193,7 +223,7 @@ void Ant::changeState(States newState)
 
 			_state = CARRIER;
 			_pheromoneType = 2;
-			_placePheromoneIntensity = 60;
+			_placePheromoneIntensity = _carrierPheromoneIntensity;
 
 		break;
 
@@ -201,7 +231,7 @@ void Ant::changeState(States newState)
 
 			_state = NESTCARRIER;
 			_pheromoneType = 2;
-			_placePheromoneIntensity = 120;		
+			_placePheromoneIntensity = _nestCarrierPheromoneIntensity;		
 
 		break;
 

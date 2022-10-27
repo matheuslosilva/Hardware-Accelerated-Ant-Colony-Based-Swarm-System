@@ -7,7 +7,7 @@ Environment::Environment(int pheromoneMatrixUpdatePixelsFrameRate, int pheromone
 	this->pheromoneEvaporationFrameRate = pheromoneEvaporationFrameRate;
 }
 
-void Environment::initializeEnvironment(OpenglBuffersManager* openglBuffersManager)
+void Environment::initializeEnvironment(OpenglBuffersManager* openglBuffersManager, int explorerPheromoneIntensity, int nestCarrierPheromoneIntensity, int carrierPheromoneIntensity)
 {
 	/*
 	int numberOfAnts	=	400;
@@ -26,7 +26,7 @@ void Environment::initializeEnvironment(OpenglBuffersManager* openglBuffersManag
 	foodSources.push_back(new FoodSource(foodAmount, foodPosX, foodPosY, foodSize, foodID));
 	*/
 
-	Nests.push_back(new AntColony(100	, 0.0, 0.0, 10.0, 0));
+	Nests.push_back(new AntColony(100	, 0.0, 0.0, 10.0, 0, explorerPheromoneIntensity, nestCarrierPheromoneIntensity, carrierPheromoneIntensity));
 	foodSources.push_back(new FoodSource(0, -0.25, -0.25, 10.0, 0));
 	foodSources.push_back(new FoodSource(0, 0.25, -0.25, 10.0, 1));
 	foodSources.push_back(new FoodSource(0, -0.25, 0.25, 10.0, 2));
