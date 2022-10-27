@@ -18,7 +18,7 @@ class AntColony
 		float size;
 
 		AntColony(int numberAnts, float x, float y, float newSize, int id);
-		AntColony(int numberAnts, float x, float y, float newSize, int id, int explorerPheromoneIntensity, int nestCarrierPheromoneIntensity, int carrierPheromoneIntensity);
+		AntColony(int numberAnts, float x, float y, float newSize, int id, int explorerPheromoneIntensity, int nestCarrierPheromoneIntensity, int carrierPheromoneIntensity, int sensorAngle);
 		bool antColision(float antPosx, float antPosY);
 
 

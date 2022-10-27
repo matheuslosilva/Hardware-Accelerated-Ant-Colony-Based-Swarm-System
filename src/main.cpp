@@ -19,6 +19,7 @@ int main(int argc, char** argv)
     int explorerPheromoneIntensity = stoi(argv[1]);
     int nestCarrierPheromoneIntensity = stoi(argv[2]);
     int carrierPheromoneIntensity = stoi(argv[3]);
+    int sensorAngle = stoi(argv[4]);
 
     srand(GLOBAL_SEED);
     
@@ -35,7 +36,7 @@ int main(int argc, char** argv)
     OpenglBuffersManager* openglBuffersManager =  new OpenglBuffersManager();
 
     Environment* environment = new Environment(7, 40);
-    environment->initializeEnvironment(openglBuffersManager, explorerPheromoneIntensity, nestCarrierPheromoneIntensity, carrierPheromoneIntensity);
+    environment->initializeEnvironment(openglBuffersManager, explorerPheromoneIntensity, nestCarrierPheromoneIntensity, carrierPheromoneIntensity, sensorAngle);
 
     int maxMovements = SIMULATION_PERIOD;
     int currentMovement = 0;
