@@ -22,7 +22,7 @@ int main(int argc, char** argv)
     
     OpenglContext* openglContext = new OpenglContext();
 
-    UI* userInterface = new UI();
+    UI* userInterface = new UI(false);
 
     openglContext->init();
 

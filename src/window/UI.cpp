@@ -6,6 +6,12 @@ UI::UI()
     turnOnGraphics = true;
 }
 
+UI::UI(bool isGraphicsOn)
+{
+    stateSimulation = STARTED;
+    turnOnGraphics = isGraphicsOn;
+}
+
 void UI::init(GLFWwindow* window)
 {
     halfScreenSize = SCR_WIDTH/2;
