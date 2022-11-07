@@ -51,6 +51,7 @@ class UI
 		float mouseX, mouseY;
 
 		UI();
+		UI(bool isGraphicsOn);
 
 		void init(GLFWwindow* window);
 		void pre_render();
