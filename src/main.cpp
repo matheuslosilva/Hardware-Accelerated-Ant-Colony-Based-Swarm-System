@@ -6,7 +6,7 @@
 #include <iostream>
 #include <unistd.h>
 
-#define SIMULATION_PERIOD 10000
+#define SIMULATION_PERIOD 15000
 
 unsigned int microsecond = 1000000;
 
@@ -19,7 +19,8 @@ int main(int argc, char** argv)
     int explorerPheromoneIntensity = stoi(argv[1]);
     int nestCarrierPheromoneIntensity = stoi(argv[2]);
     int carrierPheromoneIntensity = stoi(argv[3]);
-    int sensorAngle = stoi(argv[4]);
+    int leftSensorAngle = stoi(argv[4]);
+    int rightSensorAngle = stoi(argv[5]);
 
     srand(GLOBAL_SEED);
     
@@ -36,7 +37,7 @@ int main(int argc, char** argv)
     OpenglBuffersManager* openglBuffersManager =  new OpenglBuffersManager();
 
     Environment* environment = new Environment(7, 40);
-    environment->initializeEnvironment(openglBuffersManager, explorerPheromoneIntensity, nestCarrierPheromoneIntensity, carrierPheromoneIntensity, sensorAngle);
+    environment->initializeEnvironment(openglBuffersManager, explorerPheromoneIntensity, nestCarrierPheromoneIntensity, carrierPheromoneIntensity, leftSensorAngle, rightSensorAngle);
 
     int maxMovements = SIMULATION_PERIOD;
     int currentMovement = 0;

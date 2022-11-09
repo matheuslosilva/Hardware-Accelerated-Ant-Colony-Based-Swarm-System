@@ -32,10 +32,11 @@ Ant::Ant(float x, float y, float theta, float size, float velocity)
 	_explorerPheromoneIntensity = 60;
 	_carrierPheromoneIntensity = 60;
 	_nestCarrierPheromoneIntensity = 120;
-	_sensorAngle = 450;
+	_leftSensorAngle = 450;
+	_rightSensorAngle = 450;
 }
 
-Ant::Ant(float x, float y, float theta, float size, float velocity, int explorerPheromoneIntensity, int nestCarrierPheromoneIntensity, int carrierPheromoneIntensity, int sensorAngle)
+Ant::Ant(float x, float y, float theta, float size, float velocity, int explorerPheromoneIntensity, int nestCarrierPheromoneIntensity, int carrierPheromoneIntensity, int leftSensorAngle, int rightSensorAngle)
 {
 	_x = x; //+ (float)(rand()%100-50)/SCR_WIDTH;
 	_y = y; //+ (float)(rand()%100-50)/SCR_HEIGHT;
@@ -57,7 +58,8 @@ Ant::Ant(float x, float y, float theta, float size, float velocity, int explorer
 	_explorerPheromoneIntensity = explorerPheromoneIntensity;
 	_nestCarrierPheromoneIntensity = nestCarrierPheromoneIntensity;
 	_carrierPheromoneIntensity = carrierPheromoneIntensity;
-	_sensorAngle = sensorAngle;
+	_leftSensorAngle = leftSensorAngle;
+	_rightSensorAngle = rightSensorAngle;
 
 }
 
@@ -71,7 +73,7 @@ void Ant::move(int l)
 	_x += _velocity*cosLookup[angle];
 	_y += _velocity*sinLookup[angle];
 
-	angle = (int)(((_theta/M_PI)*1800) + _sensorAngle);//(int)(((_theta+M_PI/4)/M_PI)*1800); // Essa formula pode ser substituida por (_theta/pi)*1800 * 450
+	angle = (int)(((_theta/M_PI)*1800) + _leftSensorAngle);//(int)(((_theta+M_PI/4)/M_PI)*1800); // Essa formula pode ser substituida por (_theta/pi)*1800 * 450
 	if(angle < 0) angle += 3600;
 	if(angle >= 3600) angle -= 3600;
 
@@ -82,7 +84,7 @@ void Ant::move(int l)
 	//
 	//   O      O
 
-	angle = (int)(((_theta/M_PI)*1800) - _sensorAngle);//(int)(((_theta-M_PI/4)/M_PI)*1800);
+	angle = (int)(((_theta/M_PI)*1800) - _rightSensorAngle);//(int)(((_theta-M_PI/4)/M_PI)*1800);
 	if(angle < 0) angle += 3600;
 	if(angle >= 3600) angle -= 3600;
 	

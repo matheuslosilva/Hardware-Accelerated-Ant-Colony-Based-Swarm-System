@@ -41,7 +41,7 @@ class Ant
 		float _velocity;
 		int _placePheromoneIntensity;
 		int   _pheromoneType;
-		int _explorerPheromoneIntensity, _nestCarrierPheromoneIntensity, _carrierPheromoneIntensity, _sensorAngle;
+		int _explorerPheromoneIntensity, _nestCarrierPheromoneIntensity, _carrierPheromoneIntensity, _leftSensorAngle, _rightSensorAngle;
 		glm::vec3 _color;
 
 		bool _foundNest, _foundFood;
@@ -53,7 +53,7 @@ class Ant
 
 	public:
 		Ant(float x, float y, float theta, float size, float velocity);
-		Ant(float x, float y, float theta, float size, float velocity, int explorerPheromoneIntensity, int nestCarrierPheromoneIntensity, int carrierPheromoneIntensity, int sensorAngle);
+		Ant(float x, float y, float theta, float size, float velocity, int explorerPheromoneIntensity, int nestCarrierPheromoneIntensity, int carrierPheromoneIntensity, int leftSensorAngle, int rightSensorAngle);
 
 		
 		//int getChoice() const { return _choice; }

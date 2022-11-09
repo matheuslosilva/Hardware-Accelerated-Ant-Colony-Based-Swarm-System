@@ -32,7 +32,7 @@ class Environment
 
 		Environment(int pheromoneMatrixUpdatePixelsFrameRate, int pheromoneEvaporationFrameRate);
 
-		void initializeEnvironment(OpenglBuffersManager* openglBuffersManager, int explorerPheromoneIntensity, int nestCarrierPheromoneIntensity, int carrierPheromoneIntensity, int sensorAngle);
+		void initializeEnvironment(OpenglBuffersManager* openglBuffersManager, int explorerPheromoneIntensity, int nestCarrierPheromoneIntensity, int carrierPheromoneIntensity, int leftSensorAngle, int rightSensorAngle);
 		void resetEnvironment();
 
 		void createNest(UI* userInterface, OpenglBuffersManager* openglBuffersManager);
