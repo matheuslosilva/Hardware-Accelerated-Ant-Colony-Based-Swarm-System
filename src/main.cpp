@@ -6,7 +6,7 @@
 #include <iostream>
 #include <unistd.h>
 
-#define SIMULATION_PERIOD 10000
+#define SIMULATION_PERIOD 15000
 
 unsigned int microsecond = 1000000;
 
@@ -16,7 +16,7 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
-    float antSpeed = stoi(argv[1])/10000.0;
+    float antSpeed = stoi(argv[1])/100000.0;
 
     srand(GLOBAL_SEED);
     
