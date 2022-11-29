@@ -1,9 +1,9 @@
 #ifndef PARAMETERASSIGNER_H
 #define PARAMETERASSIGNER_H
 
-#include "rapidjson/document.h"
-#include "rapidjson/writer.h"
-#include "rapidjson/stringbuffer.h"
+#include "extern/rapidjson/document.h"
+#include "extern/rapidjson/writer.h"
+#include "extern/rapidjson/stringbuffer.h"
 
 #include <constants.h>
 

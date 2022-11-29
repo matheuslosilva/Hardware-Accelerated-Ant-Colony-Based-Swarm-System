@@ -3,7 +3,7 @@ BINARY = main
 
 OBJ    = obj/
 SRC 	= src/
-SRC_IMGUI = extern/imgui/
+SRC_IMGUI = include/extern/imgui/
 
 FILES_IMGUI = imgui imgui_demo imgui_draw imgui_tables imgui_widgets backends/imgui_impl_glfw backends/imgui_impl_opengl3
 FILES = main opengl/window/openglContext opengl/window/UI opengl/window/camera 
@@ -14,7 +14,7 @@ FILES += opengl/render/bufferManagers/antBufferManager opengl/render/bufferManag
 FILES += opengl/utils/glad opengl/utils/constants 
 
 INCLUDES = ./include
-INCLUDES_IMGUI = ./extern/imgui
+INCLUDES_IMGUI = ./include/extern/imgui
 
 LIBRARIES = -lGL -lglfw -lX11 -lpthread -lXrandr -ldl -lm #-lXi
 OPTIONS = -g -O3 -march=native -Wall -pg
