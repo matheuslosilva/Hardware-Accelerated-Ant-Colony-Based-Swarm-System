@@ -40,7 +40,6 @@ run:
 
 clean:
 	@rm obj/*.o
-	#@rm obj/backends/*.o
 	@rm obj/opengl/render/*.o
 	@rm obj/opengl/utils/*.o
 	@rm obj/opengl/window/*.o
