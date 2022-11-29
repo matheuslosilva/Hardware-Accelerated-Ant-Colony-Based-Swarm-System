@@ -38,13 +38,6 @@ all: ${OBJECTS} ${SOURCES} ${OBJECTS_IMGUI} ${SOURCES_IMGUI}
 run:
 	./$(BINARY)
 
-clean:
-	@rm obj/*.o
-	@rm obj/opengl/render/*.o
-	@rm obj/opengl/utils/*.o
-	@rm obj/opengl/window/*.o
-	@rm obj/swarmEnvironment/*.o
-
 
 
 
