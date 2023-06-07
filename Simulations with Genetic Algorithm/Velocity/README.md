@@ -1,31 +1,13 @@
-# Hardware-Accelerated-Ant-Colony-Based-Swarm-System
-The proposal of this work involves a simulation of an ant colony swarm that was applied to a problem of search and rescue of objects of interest.
+# Velocity Experiment
 
-An evolutionary algorithm was implemented to optimize the ant swarm parameters in order to improve performance on the colony goal.
+## Objetctive
+This is an experiment used to validate the genetic algorithm. Since we can predict that ants with a greater velocity increase the fitness score (food brought to the anthill), we expect that the genetic algorithm will evolve the ants in this direction.
 
-Hardware acceleration in CUDA and OpenGL provides the system with the ability to simulate a large number of agents simultaneously, in order to study the relevance of swarm size in the performance of a task objective.
+## Ant's parameters 
+- Velocity
+  Default value : 0.0004
+  Lower Bound : 0.0002
+  Upper Bound : 0.002
+  The default value of the ant's velocity is 0.0004 and it ranges in the interval [0.0002, 0.002]
 
 
-Step 1: clone this repository with `git clone https://github.com/matheuslosilva/Hardware-Accelerated-Ant-Colony-Based-Swarm-System --recursive`
-
-Step 2: Download the following dependencies
-
-GLFW (window calls) - GLM (math calls): https://www.glfw.org/download `sudo apt-get install libglfw3-dev libglm-dev`
-
-No ARCH linux => paru -S glfw-x11 glm
-
-Step 3: change the current directory with cd Hardware-Accelerated-Ant-Colony-Based-Swarm-System
-
-Step 4: run `make`
-
-Step 5: run `make run`
-
-OpenGL and CUDA references used:
-
-https://github.com/JoeyDeVries/LearnOpenGL
-
-https://github.com/VictorGordan/opengl-tutorials
-
-https://www.khronos.org/opengl/wiki/Pixel_Buffer_Object
-
-http://www.songho.ca/opengl/gl_pbo.html
