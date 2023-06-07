@@ -1,6 +1,6 @@
 # Velocity Experiment
 
-## Objetctive
+## Objective
 This is an experiment used to validate the genetic algorithm. Since we can predict that ants with a greater velocity increase the fitness score (food brought to the anthill), we expect that the genetic algorithm will evolve the ants in this direction.
 
 ## Ant's parameters 
