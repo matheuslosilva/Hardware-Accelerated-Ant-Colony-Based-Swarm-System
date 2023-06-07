@@ -1,0 +1,25 @@
+To run this and other openGL+CUDA applications or create a new one, you must download the following dependencies:
+
+
+GLFW (window calls) - GLM (math calls):
+https://www.glfw.org/download
+sudo apt-get install libglfw3-dev libglm-dev
+
+GLAD (Opengl calls):
+https://glad.dav1d.de
+In API>gl, select 4.6 
+Generate 
+Save the archive on your repository (In this application the library is already included)
+
+CUDA (hardware acceleration):
+https://developer.nvidia.com/cuda-downloads
+OS: Linux 
+Architecture: x86_64
+Distribution: Ubuntu
+Version: XXX
+Installer Type: deb (local)
+
+NVIDIA DRIVERS:
+https://www.nvidia.com.br/Download/index.aspx?lang=br
+
+
