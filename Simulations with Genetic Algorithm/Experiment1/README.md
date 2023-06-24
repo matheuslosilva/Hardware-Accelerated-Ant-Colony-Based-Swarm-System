@@ -1,31 +1,45 @@
-# Hardware-Accelerated-Ant-Colony-Based-Swarm-System
-The proposal of this work involves a simulation of an ant colony swarm that was applied to a problem of search and rescue of objects of interest.
+# Experiment 1 - Red pheromone
 
-An evolutionary algorithm was implemented to optimize the ant swarm parameters in order to improve performance on the colony goal.
+## Objective
+The objective of this experiment was to observe the behaviour of the ants as they evolve with more parameters.
 
-Hardware acceleration in CUDA and OpenGL provides the system with the ability to simulate a large number of agents simultaneously, in order to study the relevance of swarm size in the performance of a task objective.
+## Ant's parameters 
+- RedPheromoneIntensity
+
+  Default value : 60
+  
+  Lower Bound : 0
+  
+  Upper Bound : 255
+  
+- GreenheromoneIntensity
+
+  Default value : 60
+  
+  Lower Bound : 0
+  
+  Upper Bound : 255
+
+- TIMEOUT - ant's lifetime
+
+  Default value : 400
+  
+  Lower Bound : 0
+  
+  Upper Bound : 15000
+
+- PHEROMONE_EVAPORATION - rate that pheromone evaporates
+
+  Default value : 400
+  
+  Lower Bound : 0
+  
+  Upper Bound : 15000
+
+## Observations
+
+  Due to the configuration of the environment as shown in Figure 1 below, the ants found the surprising configuration of not using the red pheromone (the pheromone responsible for helping them go home).
+
+  
 
 
-Step 1: clone this repository with `git clone https://github.com/matheuslosilva/Hardware-Accelerated-Ant-Colony-Based-Swarm-System --recursive`
-
-Step 2: Download the following dependencies
-
-GLFW (window calls) - GLM (math calls): https://www.glfw.org/download `sudo apt-get install libglfw3-dev libglm-dev`
-
-No ARCH linux => paru -S glfw-x11 glm
-
-Step 3: change the current directory with cd Hardware-Accelerated-Ant-Colony-Based-Swarm-System
-
-Step 4: run `make`
-
-Step 5: run `make run`
-
-OpenGL and CUDA references used:
-
-https://github.com/JoeyDeVries/LearnOpenGL
-
-https://github.com/VictorGordan/opengl-tutorials
-
-https://www.khronos.org/opengl/wiki/Pixel_Buffer_Object
-
-http://www.songho.ca/opengl/gl_pbo.html
