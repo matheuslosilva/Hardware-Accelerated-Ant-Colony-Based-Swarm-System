@@ -38,8 +38,21 @@ The objective of this experiment was to observe the behaviour of the ants as the
 
 ## Observations
 
-  Due to the configuration of the environment as shown in Figure 1 below, the ants found the surprising configuration of not using the red pheromone (the pheromone responsible for helping them go home).
+  Due to the configuration of the environment, the ants found the surprising configuration of not using the red pheromone (the pheromone responsible for helping them go home).
 
-  
+## Initial Simulation
+<p align = "center">
+  <img width = "300" src = "https://github.com/kenzonobre/Hardware-Accelerated-Ant-Colony-Based-Swarm-System/tree/main/Simulations%20with%20Genetic%20Algorithm/Experiment1/imgs/initialSimulation1.png">
+  <img width = "300" src = "https://github.com/kenzonobre/Hardware-Accelerated-Ant-Colony-Based-Swarm-System/tree/main/Simulations%20with%20Genetic%20Algorithm/Experiment1/imgs/initialSimulation2.png">
+  <img width = "300" src = "https://github.com/kenzonobre/Hardware-Accelerated-Ant-Colony-Based-Swarm-System/tree/main/Simulations%20with%20Genetic%20Algorithm/Experiment1/imgs/initialSimulation3.png">
+</p>
+
+## Best Simulation
+
+<p align = "center">
+  <img width = "300" src = "https://github.com/kenzonobre/Hardware-Accelerated-Ant-Colony-Based-Swarm-System/tree/main/Simulations%20with%20Genetic%20Algorithm/Experiment1/imgs/bestSimulation1.png">
+  <img width = "300" src = "https://github.com/kenzonobre/Hardware-Accelerated-Ant-Colony-Based-Swarm-System/tree/main/Simulations%20with%20Genetic%20Algorithm/Experiment1/imgs/bestSimulation2.png">
+  <img width = "300" src = "https://github.com/kenzonobre/Hardware-Accelerated-Ant-Colony-Based-Swarm-System/tree/main/Simulations%20with%20Genetic%20Algorithm/Experiment1/imgs/bestSimulation3.png">
+</p>
 
 
