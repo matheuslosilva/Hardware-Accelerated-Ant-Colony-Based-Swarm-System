@@ -190,16 +190,16 @@ void OpenglContext::run(OpenglBuffersManager* openglBuffersManager)
             break;
 
             case PAUSED:
-                parameterAssigner = new ParameterAssigner("src/swarmEnvironment/experiments/experiment.json");
-                environment = new Environment(parameterAssigner);
-                environment->initializeEnvironment(openglBuffersManager);
+                // parameterAssigner = new ParameterAssigner("src/swarmEnvironment/experiments/experiment.json");
+                // environment = new Environment(parameterAssigner);
+                // environment->initializeEnvironment(openglBuffersManager);
                 
-                environment->createNest(0, openglBuffersManager);
-                environment->createFoodSource(0, openglBuffersManager);
-                environment->createFoodSource(1, openglBuffersManager);
-                environment->createFoodSource(2, openglBuffersManager);
-                environment->createFoodSource(3, openglBuffersManager);
-                environment->createAnt(0, openglBuffersManager);
+                // environment->createNest(0, openglBuffersManager);
+                // environment->createFoodSource(0, openglBuffersManager);
+                // environment->createFoodSource(1, openglBuffersManager);
+                // environment->createFoodSource(2, openglBuffersManager);
+                // environment->createFoodSource(3, openglBuffersManager);
+                // environment->createAnt(0, openglBuffersManager);
                 while (userInterface->stateSimulation == PAUSED)
                 {
                     pollEvents();
