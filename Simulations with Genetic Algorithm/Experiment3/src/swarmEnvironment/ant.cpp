@@ -215,6 +215,15 @@ void Ant::changeState(AntStates newState)
 
 void Ant::makeDecision(vector<Anthill*> antColonies, vector < FoodSource* > foodSources, int lR, int lG, int lB, int rR, int rG, int rB)
 {
+	if(state != EXPLORER && rand() < CHANGE_TO_EXPLORER)
+		changeState(EXPLORER);
+	else if(state != CARRIER && rand() < CHANGE_TO_CARRIER)
+		changeState(CARRIER);
+	else if(state != NESTCARRIER && rand() < CHANGE_TO_NESTCARRIER)
+		changeState(NESTCARRIER);
+	else if(state != FOLLOWGREEN && rand() < CHANGE_TO_FOLLOWGREEN)
+		changeState(FOLLOWGREEN);
+
 	switch(state)
 	{
 		case EXPLORER:
@@ -331,8 +340,8 @@ void Ant::makeDecision(vector<Anthill*> antColonies, vector < FoodSource* > food
 	{
 		carryingFood = false;
 		lifeTime = 0;
-		changeState(EXPLORER);
-		//changeState(NESTCARRIER);
+		//changeState(EXPLORER);
+		changeState(NESTCARRIER);
 		posX = 0;
 		posY = 0;
 	}

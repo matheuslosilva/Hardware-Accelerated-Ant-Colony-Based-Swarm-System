@@ -17,10 +17,10 @@ using namespace std;
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 double TAX_OF_MUTATION = 0.05; // In percentage
-#define POPULATION_SIZE 20
+#define POPULATION_SIZE 30
 #define MAX_GENERATIONS 1000
 #define GENS_TO_BALANCE 30
-#define NUM_OF_GENES 4
+#define NUM_OF_GENES 8
 #define NUM_OF_GENERATIONS_FOR_FITNESS_MEAN 1
 
 //	Returns a random integer between INT_MIN and INT_MAX
@@ -275,20 +275,22 @@ public :
 
 void writeIndividualToFile(ofstream &myfile, int generation, Individual &ind)
 {
+	myfile << fixed;
 	myfile << generation << ",";
 
 	for(float gene : ind.genes)
-		myfile << setprecision(6) << gene << ",";
+		myfile << fixed << gene << ",";
 
 	myfile << ind.getLattestFitnessScore() << endl;
 }
 
 void showIndividualGenes(int generation, Individual &ind)
 {
+	cout << fixed;
 	cout << generation << ",";
 
 	for(float gene : ind.genes)
-		cout << setprecision(6) << gene << ",";
+		cout << fixed << gene << ",";
 
 	cout << ind.getLattestFitnessScore() << endl;
 }
@@ -346,6 +348,30 @@ int main ()
 	base.genes[3] = 15;
 	base.genesLowerBound[3] = 1;
 	base.genesUpperBound[3] = 100;
+
+	//	CHANGE_TO_EXPLORER Gene
+	myfile << "CHANGE_TO_EXPLORER,";
+	base.genes[4] = 21475;
+	base.genesLowerBound[4] = 0;
+	base.genesUpperBound[4] = INT_MAX;
+
+	//	CHANGE_TO_CARRIER Gene
+	myfile << "CHANGE_TO_CARRIER,";
+	base.genes[5] = 21475;
+	base.genesLowerBound[5] = 0;
+	base.genesUpperBound[5] = INT_MAX;
+
+	//	CHANGE_TO_NESTCARRIER Gene
+	myfile << "CHANGE_TO_NESTCARRIER,";
+	base.genes[6] = 21475;
+	base.genesLowerBound[6] = 0;
+	base.genesUpperBound[6] = INT_MAX;
+
+	//	CHANGE_TO_FOLLOWGREEN Gene
+	myfile << "CHANGE_TO_FOLLOWGREEN,";
+	base.genes[7] = 21475;
+	base.genesLowerBound[7] = 0;
+	base.genesUpperBound[7] = INT_MAX;
 	// ----------------------------------------------- //
 
 	myfile << "Fitness Score" << endl;

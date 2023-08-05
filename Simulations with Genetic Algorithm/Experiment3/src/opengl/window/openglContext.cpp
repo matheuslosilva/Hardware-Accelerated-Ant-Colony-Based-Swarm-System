@@ -3,7 +3,7 @@
 #include <time.h>
 #include <random>
 
-#define SIMULATION_PERIOD 15000
+#define SIMULATION_PERIOD 21000
 
 OpenglContext::OpenglContext(){}
 
@@ -92,7 +92,7 @@ void OpenglContext::pollEvents()
     frameCounter++;
     frameCounter %= (SIMULATION_PERIOD + 1); 
     //frameCounter %= 1000; 
-    cerr << "frameCounter = " << frameCounter << endl;
+    //cerr << "frameCounter = " << frameCounter << endl;
 }
 
 void OpenglContext::pre_render()

@@ -9,7 +9,7 @@ void UI::init(GLFWwindow* window)
     stateSimulation = PAUSED;
     UIAction = DO_NOTHING;
 
-    turnOnGraphics = true;
+    turnOnGraphics = false;
     turnOnCameraMovement = true;
     openGlRenderUpdateFrameRate = 1;
 
